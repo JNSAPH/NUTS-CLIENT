@@ -1,0 +1,94 @@
+name: Release Nuts
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: Release version/name
+        required: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository universe
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev
+
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri/ -> target/'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build the app
+        run: npm run tauri build -- --ci
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}
+          path: |
+            ./src-tauri/target/release/nuts-client
+            ./src-tauri/target/release/bundle/dmg/*.dmg
+            ./src-tauri/target/release/Nuts Client.exe
+
+  release:
+    permissions:
+      contents: write
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Package linux binary for release
+        run: |
+          cd ./ubuntu-latest/
+          chmod u+x nuts-client
+          tar -czvf Nuts${{ github.event.inputs.version }}_Linux_Release.tar.gz nuts-client
+      - name: Package macOS binary for release
+        run: |
+          cd ./macos-latest/bundle/dmg/
+          tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.dmg
+      - name: Package Windows binary for release
+        run: |
+          cd ./windows-latest/
+          zip Nuts_${{ github.event.inputs.version }}_Windows_Release.zip "Nuts Client.exe"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          generate_release_notes: true
+          files: |
+            ubuntu-latest/Nuts_${{ github.event.inputs.version }}_Linux_Release.tar.gz
+            macos-latest/bundle/dmg/Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz
+            windows-latest/Nuts_${{ github.event.inputs.version }}_Windows_Release.zip

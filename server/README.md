@@ -1,0 +1,1 @@
+NATS Server that takes every request to test :D

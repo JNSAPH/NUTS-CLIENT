@@ -1,0 +1,107 @@
+import { open as openFileDialog } from '@tauri-apps/plugin-dialog';
+import { exists, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import Logger from '@/services/logging';
+import { ProjectFile } from '@/types/ProjectFile';
+
+enum Event {
+    CANCELED = "CANCELED",
+    ERROR = "ERROR",
+}
+
+export async function openProjectFile(): Promise<[string, ProjectFile] | Event> {
+    // Get the file path
+    const filePath = await openFileDialog({
+        multiple: false,
+        directory: false,
+    });
+
+    if (filePath === null) {
+        Logger.warning("openFile", "No file was selected");
+        return Event.CANCELED;
+    } else {
+        Logger.info("openFile", "File selected: ", filePath);
+    }
+
+    try {
+
+        // Check if the file exists
+        const fileExists = await exists(filePath);
+
+        if (!fileExists) {
+            Logger.error("openFile", "The selected file does not exist");
+            return Event.ERROR;
+        }
+
+        // Check if file is in the correct format
+        const projectFile = await getProjectFileContent(filePath);
+        if (projectFile === null) {
+            Logger.error("openFile", "The selected file is not in the correct format");
+            return Event.ERROR;
+        }
+
+        return [filePath, projectFile];
+    } catch (error) {
+        Logger.error("openFile", "Error opening file: ", error);
+        return Event.ERROR;
+    }
+
+}
+
+export async function getProjectFileContent(filePath: string): Promise<ProjectFile | null> {
+    try {
+        const fileContent = await readTextFile(filePath);
+        const projectFile = checkFileFormat(fileContent);
+        return projectFile;
+    } catch (error) {
+        Logger.error("getFileContent", "Error getting file content: ", error);
+        return null;
+    }
+}
+
+export async function saveProjectFile(content: ProjectFile, filePath: string) {
+    try {
+        if (!filePath) { return; }
+
+        // remove the last response from the requests
+        const contentCopy = { ...content };
+        contentCopy.requests = contentCopy.requests.map((request) => {
+            delete request.lastResponse;
+            return request;
+        });
+
+        await writeTextFile(filePath, JSON.stringify(contentCopy, null, 2));
+
+    } catch (error) {
+        Logger.error("saveFile", "Error saving file: ", error);
+    }
+
+
+}
+
+function checkFileFormat(fileContent: string): ProjectFile | null {
+    try {
+        const projectFile: ProjectFile = JSON.parse(fileContent);
+
+        const requests = projectFile.requests
+
+        // Top Level
+        if (
+            !projectFile.name
+        ) throw new Error("Top level properties are missing");
+
+        requests.forEach((request) => {
+            if (
+                request.name === undefined ||
+                request.url === undefined ||
+                request.topic === undefined ||
+                request.data === undefined
+            ) throw new Error("Request properties are missing");
+        }
+        );
+
+        return projectFile;
+    } catch (error) {
+        Logger.error("checkFileFormat", "Error checking file format: ", error);
+        return null;
+    }
+}
