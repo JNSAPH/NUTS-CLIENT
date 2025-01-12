@@ -47,9 +47,9 @@ function SideBarItem(props: SideBarItemProps) {
 
 function UpdateAvailableItem() {
     const reduxState = useSelector((state: RootState) => state.windowProperties);
-    console.log(reduxState);
+    const hideUpdateNotifications = reduxState.clientSettings?.hideUpdateNotifications ?? false;
     
-    if (reduxState.updateInfo !== null && !reduxState.clientSettings.hideUpdateNotifications) {
+    if (reduxState.updateInfo !== null && hideUpdateNotifications) {
         return (
             <div className='relative flex items-center justify-center w-full h-[48px] bg-clientColors-button-background hover:bg-clientColors-button-hover cursor-pointer' onClick={() => {
                 window.open(reduxState.updateInfo?.html_url, '_blank'); // Move this to open in the default browser @TODO

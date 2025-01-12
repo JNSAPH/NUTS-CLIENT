@@ -37,15 +37,6 @@ export default function Home() {
         dispatch(setUpdateInfo(null));
       }
 
-      // // Check for Default Settings and apply them if they don't exist
-      // const defaultSetting = reduxState.windowProperties.clientSettings;
-      // if (defaultSetting === null) {
-      //   Logger.info("No default settings found, applying default settings...");
-      //   dispatch(setClientSettings({
-      //     hideUpdateNotifications: false,
-      //   }));
-      // }
-
       // Wait for 500 ms
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
