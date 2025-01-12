@@ -1,4 +1,4 @@
-import { open as openFileDialog } from '@tauri-apps/plugin-dialog';
+import { open as openFileDialog, save as saveFileDialog } from '@tauri-apps/plugin-dialog';
 import { exists, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import Logger from '@/services/logging';
 import { ProjectFile } from '@/types/ProjectFile';
@@ -44,7 +44,38 @@ export async function openProjectFile(): Promise<[string, ProjectFile] | Event> 
         Logger.error("openFile", "Error opening file: ", error);
         return Event.ERROR;
     }
+}
 
+export async function createProjectFile(): Promise<[string, ProjectFile] | Event> {
+    const filePath = await saveFileDialog({
+        filters: [
+            {
+                name: "JSON",
+                extensions: ["json"],
+            },
+        ]
+    })
+
+    if (filePath === null) {
+        Logger.warning("createFile", "No file was selected");
+        return Event.CANCELED;
+    }
+
+    try {
+        writeTextFile(filePath, JSON.stringify({
+            name: "New Project",
+            requests: [],
+        }, null, 2));
+
+        return [filePath, {
+            name: "New Project",
+            requests: [],
+        } as ProjectFile
+        ]
+    } catch (error) {
+        Logger.error("createFile", "Error creating file: ", error);
+        return Event.ERROR;
+    }
 }
 
 export async function getProjectFileContent(filePath: string): Promise<ProjectFile | null> {

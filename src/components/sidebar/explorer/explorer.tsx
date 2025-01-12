@@ -4,7 +4,7 @@ import { IcoBin, IcoPlusBorder } from '@/components/Icons';
 import { ask } from '@tauri-apps/plugin-dialog';
 import { setFileContent, setFilePath, setSelectedRequestIndex } from '@/redux/slices/projectFile';
 import { RootState } from '@/redux/store';
-import { openProjectFile } from '@/services/fileManager';
+import { createProjectFile, openProjectFile } from '@/services/fileManager';
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -45,6 +45,7 @@ function SidebarItem(params: SidebarItemProps) {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
     };
+
     const selectedRequest = useSelector((state: RootState) => state.projectFile.fileContent?.requests[state.projectFile.selectedRequestIndex]);
 
     const handleInputBlur = () => {
@@ -109,8 +110,11 @@ function SidebarItem(params: SidebarItemProps) {
 
 export default function ExplorerSideBar() {
     const content = useSelector((state: RootState) => state.projectFile);
+    const [isEditingProjectName, setIsEditingProjectName] = React.useState(false);
+    const [projectNameInput, setProjectNameInput] = React.useState(content.fileContent?.name || "");
     const dispatch = useDispatch();
 
+    // Open a file
     async function openFile() {
         const result = await openProjectFile();
 
@@ -123,6 +127,48 @@ export default function ExplorerSideBar() {
             dispatch(setFilePath(filePath));
         }
     }
+
+    // Create a new file
+    async function createNewFile() {
+        const result = await createProjectFile();
+        if (result !== "ERROR" && result !== "CANCELED") {
+            const [filePath, fileContent] = result;
+            dispatch(setFileContent(fileContent));
+            dispatch(setFilePath(filePath));
+        }
+    }
+
+    const handleDoubleClick = () => {
+        setIsEditingProjectName(true);
+    };
+
+    const handleProjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setProjectNameInput(e.target.value);
+    };
+
+    const handleProjectNameBlur = () => {
+        setIsEditingProjectName(false);
+        if (projectNameInput.trim() && projectNameInput !== content.fileContent?.name) {
+            // Update the project name in the Redux store
+            if(content.fileContent) {
+            dispatch(
+                setFileContent({
+                  ...content.fileContent,
+                  name: projectNameInput || "",
+                })
+              );
+            }
+            
+        } else {
+            setProjectNameInput(content.fileContent?.name || ""); // Revert to the original name
+        }
+    };
+
+    const handleProjectNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleProjectNameBlur(); // Save changes on Enter key
+        }
+    };
 
     async function addNewRequest() {
         if (content.fileContent) {
@@ -143,23 +189,59 @@ export default function ExplorerSideBar() {
     }
 
     return (
-        <div className='h-full w-full border-r-2 border-clientColors-windowBorder overflow-auto space-y-[2px] p-2'>
+        <div className="h-full w-full border-r-2 border-clientColors-windowBorder overflow-auto space-y-[2px] p-2">
             {content.filePath ? (
                 <>
-                    <div className='flex justify-between items-center'>
-                        <p className='font-bold'>{content.fileContent?.name}</p>
-                        <div className='transition-all hover:scale-105 active:scale-95 cursor-pointer' onClick={addNewRequest}>
+                    <div className="flex justify-between items-center">
+                        {isEditingProjectName ? (
+                            <input
+                                type="text"
+                                value={projectNameInput}
+                                onChange={handleProjectNameChange}
+                                onBlur={handleProjectNameBlur}
+                                onKeyDown={handleProjectNameKeyDown}
+                                autoFocus
+                                className="bg-clientColors-card-background border border-clientColors-card-border w-full mr-2"
+                            />
+                        ) : (
+                            <p
+                                onDoubleClick={handleDoubleClick}
+                                className="font-bold cursor-pointer"
+                            >
+                                {content.fileContent?.name}
+                            </p>
+                        )}
+                        <div
+                            className="transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                            onClick={addNewRequest}
+                        >
                             <IcoPlusBorder size={18} />
                         </div>
                     </div>
                     {content.fileContent?.requests.map((request, index) => (
-                        <SidebarItem key={index} name={request.name} index={index} active={content.selectedRequestIndex == index} />
+                        <SidebarItem
+                            key={index}
+                            name={request.name}
+                            index={index}
+                            active={content.selectedRequestIndex == index}
+                        />
                     ))}
                 </>
             ) : (
                 <div>
-                    <pre className='text-red-500 text-center pt-2'>No file selected</pre>
-                    <button onClick={openFile} className='bg-clientColors-button-background hover:bg-clientColors-button-hover active:bg-clientColors-button-active text-white p-2 rounded-md w-full mt-2'>Open a file</button>
+                    <pre className="text-red-500 text-center pt-2">No file selected</pre>
+                    <button
+                        onClick={openFile}
+                        className="bg-clientColors-button-background hover:bg-clientColors-button-hover active:bg-clientColors-button-active text-white p-2 rounded-md w-full mt-2"
+                    >
+                        Open a file
+                    </button>
+                    <button
+                        onClick={createNewFile}
+                        className="bg-clientColors-button-background hover:bg-clientColors-button-hover active:bg-clientColors-button-active text-white p-2 rounded-md w-full mt-2"
+                    >
+                        Create new File
+                    </button>
                 </div>
             )}
         </div>
