@@ -77,6 +77,7 @@ jobs:
       - name: Package macOS binary for release
         run: |
           cd ./macos-latest/bundle/macos/
+          xattr -cr *.app
           tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.app
       - name: Package Windows binary for release
         run: |
