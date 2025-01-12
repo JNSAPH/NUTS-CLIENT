@@ -38,7 +38,6 @@ export default function Page() {
       if (jsonString === "") return ""; // Return empty string if null
       return JSON.stringify(JSON.parse(jsonString), null, 2); // Format with indentation
     } catch (e) {
-      Logger.error("Failed to format JSON", e);
       return jsonString; // Return raw string if it's not valid JSON
     }
   };

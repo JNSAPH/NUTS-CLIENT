@@ -52,7 +52,6 @@ function SidebarItem(params: SidebarItemProps) {
         setIsEditing(false);
         if (selectedRequest && content.fileContent) {
         if (inputValue.trim()) {
-            console.log("inputValue", inputValue);
             dispatch(
                 setFileContent({
                   ...content.fileContent,

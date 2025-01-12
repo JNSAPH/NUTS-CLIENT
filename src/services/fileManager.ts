@@ -16,7 +16,6 @@ export async function openProjectFile(): Promise<[string, ProjectFile] | Event> 
     });
 
     if (filePath === null) {
-        Logger.warning("openFile", "No file was selected");
         return Event.CANCELED;
     } else {
         Logger.info("openFile", "File selected: ", filePath);
@@ -93,20 +92,18 @@ export async function saveProjectFile(content: ProjectFile, filePath: string) {
     try {
         if (!filePath) { return; }
 
-        // remove the last response from the requests
-        const contentCopy = { ...content };
-        contentCopy.requests = contentCopy.requests.map((request) => {
+        content.requests = content.requests.map((request) => {
             delete request.lastResponse;
             return request;
         });
 
-        await writeTextFile(filePath, JSON.stringify(contentCopy, null, 2));
+        await writeTextFile(filePath, JSON.stringify(content, null, 2));
+        await getProjectFileContent(filePath); // This is for testing purposes
+
 
     } catch (error) {
         Logger.error("saveFile", "Error saving file: ", error);
     }
-
-
 }
 
 function checkFileFormat(fileContent: string): ProjectFile | null {
