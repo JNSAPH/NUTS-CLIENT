@@ -53,7 +53,7 @@ jobs:
         with:
           name: ${{ matrix.platform }}
           path: |
-            ./src-tauri/target/release/nuts-client
+            ./src-tauri/target/release/NutsClient
             ./src-tauri/target/release/bundle/dmg/*.dmg
             ./src-tauri/target/release/NutsClient.exe
 
@@ -72,8 +72,8 @@ jobs:
       - name: Package linux binary for release
         run: |
           cd ./ubuntu-latest/
-          chmod u+x nuts-client
-          tar -czvf Nuts${{ github.event.inputs.version }}_Linux_Release.tar.gz nuts-client
+          chmod u+x NutsClient
+          tar -czvf Nuts${{ github.event.inputs.version }}_Linux_Release.tar.gz NutsClient
       - name: Package macOS binary for release
         run: |
           cd ./macos-latest/bundle/dmg/
