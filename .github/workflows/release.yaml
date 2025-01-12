@@ -69,11 +69,11 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
-      - name: Package linux binary for release
-        run: |
-          cd ./ubuntu-latest/
-          chmod u+x nuts-client
-          tar -czvf Nuts${{ github.event.inputs.version }}_Linux_Release.tar.gz nuts-client
+      # - name: Package linux binary for release
+      #   run: |
+      #     cd ./ubuntu-latest/
+      #     chmod u+x nuts-client
+      #     tar -czvf Nuts${{ github.event.inputs.version }}_Linux_Release.tar.gz nuts-client
       - name: Package macOS binary for release
         run: |
           cd ./macos-latest/bundle/dmg/
