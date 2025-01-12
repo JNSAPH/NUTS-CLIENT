@@ -36,6 +36,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
+      - name: Ensure xattr is installed (macOS only)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          if ! command -v xattr &> /dev/null; then
+            echo "xattr not found. Installing..."
+            brew install xattr
+          else
+            echo "xattr is already installed."
+          fi
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
