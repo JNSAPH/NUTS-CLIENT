@@ -96,5 +96,5 @@ jobs:
           generate_release_notes: true
           files: |
             ubuntu-latest/Nuts_${{ github.event.inputs.version }}_Linux_Release.tar.gz
-            macos-latest/bundle/dmg/Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz
+            macos-latest/bundle/macos/Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz
             windows-latest/Nuts_${{ github.event.inputs.version }}_Windows_Release.zip
