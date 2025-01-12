@@ -1,13 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCurrentWindow, LogicalSize, PhysicalSize } from '@tauri-apps/api/window';
 import { redirect } from 'next/navigation'
 import Logger from "@/services/logging";
+import { isUpdateAvailable } from "@/services/updateCheck";
+import { useDispatch } from "react-redux";
+import { setUpdateInfo } from "@/redux/slices/windowProperties";
 
 const window = getCurrentWindow();
 
 export default function Home() {
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     async function startClient() {
       Logger.info("Starting client...");
@@ -19,14 +25,21 @@ export default function Home() {
       await window.center();
 
       // Check for updates
-      
+      const update = await isUpdateAvailable();
+      if (update) {
+        Logger.info(`Update available: ${update.old_version} -> ${update.tag_name}`);
+        Logger.info(`Release: ${update.name}`);
+        dispatch(setUpdateInfo(update));
+      }
+
       // Wait for 500 ms
-      await new Promise((resolve) => setTimeout(resolve, 1500)); 
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Reset some Stuff
       await window.setResizable(true);
       await window.setSize(new PhysicalSize(1000, 600));
       await window.center();
+      await setIsLoading(false);
 
       // Redirect to explorer
       redirect("/client/explorer");
@@ -35,13 +48,15 @@ export default function Home() {
     startClient();
   }, [])
 
-  return (
-    <div data-tauri-drag-region className="font-[family-name:var(--font-geist-sans)] h-full w-full flex flex-col space-y-8 items-center justify-center bg-clientColors-windowBackground border-2 border-clientColors-windowBorder rounded-lg">
-      <span className="relative flex h-12 w-12">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-clientColors-accentColor opacity-75"></span>
-        <span className="relative inline-flex rounded-full h-full w-full bg-clientColors-accentColor"></span>
-      </span>
-      <p className="text-xl font-bold">Loading...</p>
-    </div>
-  );
+  if (isLoading) {
+    return (
+      <div data-tauri-drag-region className="font-[family-name:var(--font-geist-sans)] h-full w-full flex flex-col space-y-8 items-center justify-center bg-clientColors-windowBackground border-2 border-clientColors-windowBorder rounded-lg">
+        <span className="relative flex h-12 w-12">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-clientColors-accentColor opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-full w-full bg-clientColors-accentColor"></span>
+        </span>
+        <p className="text-xl font-bold">Loading...</p>
+      </div>
+    );
+  }
 }

@@ -36,7 +36,7 @@ function SidebarItem(params: SidebarItemProps) {
     }
 
     return (
-        <div className={`flex items-center space-x-2 p-1 rounded-md hover:bg-clientColors-card-background transition-all justify-between ${params.active ? "bg-clientColors-card-background" : ""}`} onClick={() => dispatch(setSelectedRequestIndex(params.index))}>
+        <div className={`flex items-center space-x-2 p-1 rounded-md hover:bg-clientColors-card-background transition-all justify-between cursor-pointer ${params.active ? "bg-clientColors-card-background" : ""}`} onClick={() => dispatch(setSelectedRequestIndex(params.index))}>
             <p>{params.name}</p>
             {params.active ? (
                 <div className='flex space-x-2' onClick={removeRequest} >
@@ -83,12 +83,12 @@ export default function ExplorerSideBar() {
     }
 
     return (
-        <div className='h-full w-full border-r-2 border-clientColors-windowBorder overflow-auto p-2'>
+        <div className='h-full w-full border-r-2 border-clientColors-windowBorder overflow-auto space-y-[2px] p-2'>
             {content.filePath ? (
                 <>
                     <div className='flex justify-between items-center'>
                         <p className='font-bold'>{content.fileContent?.name}</p>
-                        <div className='transition-all hover:scale-105 active:scale-95' onClick={addNewRequest}>
+                        <div className='transition-all hover:scale-105 active:scale-95 cursor-pointer' onClick={addNewRequest}>
                             <IcoPlusBorder size={18} />
                         </div>
                     </div>

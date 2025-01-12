@@ -13,7 +13,7 @@ interface ItemProps {
 
 function Item(props: ItemProps) {
     return (
-        <div className="bg-clientColors-button-background hover:bg-clientColors-button-hover active:bg-clientColors-button-active text-sm px-2 rounded-md" onClick={props.onClick}>
+        <div className="bg-clientColors-button-background hover:bg-clientColors-button-hover active:bg-clientColors-button-active text-sm px-2 rounded-md cursor-pointer" onClick={props.onClick}>
             {props.text}
         </div>
     )

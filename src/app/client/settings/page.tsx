@@ -4,8 +4,8 @@
 
 export default function Page() {
   return (
-    <div className="bg-gray-800 h-full w-full">
-      <p>Settings View</p>
+    <div className="p-4 h-full w-full">
+      <pre>No settings available yet! Sorry (┬┬﹏┬┬)</pre>
     </div>
   );
 }
