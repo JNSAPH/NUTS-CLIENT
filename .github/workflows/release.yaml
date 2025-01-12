@@ -54,7 +54,7 @@ jobs:
           name: ${{ matrix.platform }}
           path: |
             ./src-tauri/target/release/NutsClient
-            ./src-tauri/target/release/bundle/dmg/*.dmg
+            ./src-tauri/target/release/bundle/macos/*.app
             ./src-tauri/target/release/NutsClient.exe
 
   release:
@@ -76,8 +76,8 @@ jobs:
           tar -czvf Nuts_${{ github.event.inputs.version }}_Linux_Release.tar.gz "NutsClient"
       - name: Package macOS binary for release
         run: |
-          cd ./macos-latest/bundle/dmg/
-          tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.dmg
+          cd ./macos-latest/bundle/macos/
+          tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.app
       - name: Package Windows binary for release
         run: |
           cd ./windows-latest/
