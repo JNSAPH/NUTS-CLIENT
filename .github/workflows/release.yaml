@@ -55,7 +55,7 @@ jobs:
           path: |
             ./src-tauri/target/release/nuts-client
             ./src-tauri/target/release/bundle/dmg/*.dmg
-            ./src-tauri/target/release/Nuts Client.exe
+            ./src-tauri/target/release/NutsClient.exe
 
   release:
     permissions:
