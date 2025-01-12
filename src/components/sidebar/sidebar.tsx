@@ -48,10 +48,12 @@ function SideBarItem(props: SideBarItemProps) {
 
 function UpdateAvailableItem() {
     const reduxState = useSelector((state: RootState) => state.windowProperties);
+    console.log(reduxState.updateInfo);
+    
     if (reduxState.updateInfo !== null) {
         return (
             <div className='relative flex items-center justify-center w-full h-[48px] bg-clientColors-button-background hover:bg-clientColors-button-hover cursor-pointer' onClick={() => {
-                redirect(reduxState.updateInfo?.html_url);
+                window.open(reduxState.updateInfo?.html_url, '_blank'); // Move this to open in the default browser @TODO
             }}>
                 {/* Icon */}
                 <div className="relative">

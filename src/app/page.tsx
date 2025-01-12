@@ -30,6 +30,8 @@ export default function Home() {
         Logger.info(`Update available: ${update.old_version} -> ${update.tag_name}`);
         Logger.info(`Release: ${update.name}`);
         dispatch(setUpdateInfo(update));
+      } else {
+        dispatch(setUpdateInfo(null));
       }
 
       // Wait for 500 ms
