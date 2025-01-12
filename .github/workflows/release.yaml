@@ -78,11 +78,12 @@ jobs:
           cd ./ubuntu-latest/
           chmod u+x NutsClient
           tar -czvf Nuts_${{ github.event.inputs.version }}_Linux_Release.tar.gz "NutsClient"
+          
       - name: Package macOS binary for release
         run: |
           cd ./macos-latest/bundle/macos/
-          xattr -cr *.app
           tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.app
+
       - name: Package Windows binary for release
         run: |
           cd ./windows-latest/
