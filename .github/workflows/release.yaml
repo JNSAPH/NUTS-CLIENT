@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [ macos-latest ] # ubuntu-latest, windows-latest, 
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]  
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -76,7 +76,6 @@ jobs:
       - name: Package macOS binary for release
         run: |
           cd ./macos-latest/bundle/macos/
-          xattr -cr *.app
           tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.app
 
       - name: Package linux binary for release
@@ -96,6 +95,20 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
+          body: |
+            **Important note for macOS users:**
+
+            The macOS release may be affected by an issue with file attributes that can prevent the application from launching correctly. To resolve this, you will need to run the following command in your terminal:
+
+            ```
+            xattr -cr ./path/to/your.app
+            ```
+
+            **What does this command do?**
+            The `xattr` command removes any extended attributes (such as quarantine flags) that macOS adds to files downloaded from the internet. This ensures the app can run without any security warnings or restrictions.
+
+            **Why do you need to run this?**
+            macOS sometimes marks downloaded files as coming from an untrusted source, and this can prevent the app from launching properly. Running the `xattr` command clears those flags and allows the app to function normally.
           files: |
             ubuntu-latest/Nuts_${{ github.event.inputs.version }}_Linux_Release.tar.gz
             macos-latest/bundle/macos/Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz
