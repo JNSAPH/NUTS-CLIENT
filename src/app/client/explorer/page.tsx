@@ -98,8 +98,9 @@ export default function Page() {
     try {
       const response = await sendNatsMessage(selectedRequest?.url, selectedRequest?.topic, selectedRequest?.data);
       dispatch(setLastResponse(JSON.stringify(response, null, 2)));
-    } catch (error) {
+    } catch (error) {    
       Logger.error("Failed to send request", error);
+      dispatch(setLastResponse(JSON.stringify(error, null, 2)));
     }
   }
 
