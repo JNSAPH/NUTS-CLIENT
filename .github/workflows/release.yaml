@@ -36,12 +36,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
-      - name: Test xattr
-        if: matrix.platform == 'macos-latest'
-        run: |
-          xattr --help
-
-
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
@@ -52,6 +46,11 @@ jobs:
 
       - name: Build the app
         run: npm run tauri build -- --ci
+
+      - name: Run xattr on mac
+        if: matrix.platform == 'macos-latest'
+        run: |
+          xattr -cr ./src-tauri/target/release/bundle/macos/*.app
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
