@@ -1,3 +1,4 @@
+import { ClientSettings } from '@/types/Settings';
 import { isUpdateAvailableResponse } from '@/types/UpdateStuff';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getCurrentWindow } from '@tauri-apps/api/window';
@@ -7,6 +8,7 @@ interface WindowPropertiesState {
   title: string;
   selectedTab: AvailableTabs;
   updateInfo: isUpdateAvailableResponse | null;
+  clientSettings: ClientSettings; 
 }
 
 export type AvailableTabs = 'explorer' | 'settings';
@@ -15,7 +17,10 @@ const initialState: WindowPropertiesState = {
   isFullScreen: false,
   title: 'NUTS - NATS Client',
   selectedTab: 'explorer',
-  updateInfo: null
+  updateInfo: null,
+  clientSettings: {
+    hideUpdateNotifications: false,
+  }
 };
 
 const windowPropertiesSlice = createSlice({
@@ -37,8 +42,11 @@ const windowPropertiesSlice = createSlice({
     setUpdateInfo: (state, action: PayloadAction<isUpdateAvailableResponse | null>) => {
       state.updateInfo = action.payload;
     },
+    setClientSettings: (state, action: PayloadAction<ClientSettings>) => {
+      state.clientSettings = action.payload;
+    }
   },
 });
 
-export const { toggleFullScreen, setTitle, setSelectedTab, setUpdateInfo } = windowPropertiesSlice.actions;
+export const { toggleFullScreen, setTitle, setSelectedTab, setUpdateInfo, setClientSettings } = windowPropertiesSlice.actions;
 export default windowPropertiesSlice.reducer;

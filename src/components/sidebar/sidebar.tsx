@@ -6,7 +6,6 @@ import { AvailableTabs, setSelectedTab } from '@/redux/slices/windowProperties';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';  // Adjust if necessary
 import { redirect } from 'next/navigation'
-import { reduceAppConfig } from 'next/dist/build/utils';
 
 interface SideBarItemProps {
     icon: React.ReactNode;
@@ -48,9 +47,9 @@ function SideBarItem(props: SideBarItemProps) {
 
 function UpdateAvailableItem() {
     const reduxState = useSelector((state: RootState) => state.windowProperties);
-    console.log(reduxState.updateInfo);
+    console.log(reduxState);
     
-    if (reduxState.updateInfo !== null) {
+    if (reduxState.updateInfo !== null && !reduxState.clientSettings.hideUpdateNotifications) {
         return (
             <div className='relative flex items-center justify-center w-full h-[48px] bg-clientColors-button-background hover:bg-clientColors-button-hover cursor-pointer' onClick={() => {
                 window.open(reduxState.updateInfo?.html_url, '_blank'); // Move this to open in the default browser @TODO

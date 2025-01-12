@@ -29,8 +29,12 @@ const store = configureStore({
 // Create persistor to handle rehydration
 const persistor = persistStore(store);
 
+const clearPersistedData = () => {
+  persistor.purge();
+};
+
 // Define types for RootState and AppDispatch
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export { store, persistor };
+export { store, persistor, clearPersistedData };

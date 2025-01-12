@@ -38,6 +38,15 @@ export default {
           brand: {
             red: "#FF7780",
           }
+        },
+        shadcn: {
+          input: "#09090b",
+          ring: "#64D5EA",
+          background: "#252526",
+          primary: {
+            DEFAULT: "#fff",
+            foreground: "#282a36",
+          }
         }
       },
     },

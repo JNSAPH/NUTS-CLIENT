@@ -124,6 +124,8 @@
     "fs:allow-video-write-recursive",
     "fs:allow-write-text-file",
     "fs:write-all",
-    "fs:write-files"
+    "fs:write-files",
+    "fs:default",
+    "dialog:default"
   ]
 }

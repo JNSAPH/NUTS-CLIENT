@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCurrentWindow, LogicalSize, PhysicalSize } from '@tauri-apps/api/window';
+import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
 import { redirect } from 'next/navigation'
 import Logger from "@/services/logging";
 import { isUpdateAvailable } from "@/services/updateCheck";
-import { useDispatch } from "react-redux";
-import { setUpdateInfo } from "@/redux/slices/windowProperties";
+import { useDispatch, useSelector } from "react-redux";
+import { setClientSettings, setUpdateInfo } from "@/redux/slices/windowProperties";
+import { RootState } from "@/redux/store";
 
 const window = getCurrentWindow();
 
 export default function Home() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+
+  const reduxState = useSelector((state: RootState) => state);
 
   useEffect(() => {
     async function startClient() {
@@ -34,12 +37,21 @@ export default function Home() {
         dispatch(setUpdateInfo(null));
       }
 
+      // // Check for Default Settings and apply them if they don't exist
+      // const defaultSetting = reduxState.windowProperties.clientSettings;
+      // if (defaultSetting === null) {
+      //   Logger.info("No default settings found, applying default settings...");
+      //   dispatch(setClientSettings({
+      //     hideUpdateNotifications: false,
+      //   }));
+      // }
+
       // Wait for 500 ms
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Reset some Stuff
       await window.setResizable(true);
-      await window.setSize(new PhysicalSize(1000, 600));
+      await window.setSize(new LogicalSize(1000, 600));
       await window.center();
       await setIsLoading(false);
 
