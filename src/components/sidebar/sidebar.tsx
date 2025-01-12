@@ -49,7 +49,7 @@ function UpdateAvailableItem() {
     const reduxState = useSelector((state: RootState) => state.windowProperties);
     const hideUpdateNotifications = reduxState.clientSettings?.hideUpdateNotifications ?? false;
     
-    if (reduxState.updateInfo !== null && hideUpdateNotifications) {
+    if (reduxState.updateInfo !== null && !hideUpdateNotifications) {
         return (
             <div className='relative flex items-center justify-center w-full h-[48px] bg-clientColors-button-background hover:bg-clientColors-button-hover cursor-pointer' onClick={() => {
                 window.open(reduxState.updateInfo?.html_url, '_blank'); // Move this to open in the default browser @TODO
