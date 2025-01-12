@@ -47,18 +47,13 @@ jobs:
       - name: Build the app
         run: npm run tauri build -- --ci
 
-      - name: Run xattr on mac
-        if: matrix.platform == 'macos-latest'
-        run: |
-          xattr -cr ./src-tauri/target/release/bundle/macos/*.app
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}
           path: |
             ./src-tauri/target/release/NutsClient
-            ./src-tauri/target/release/bundle/macos/*.app
+            ./src-tauri/target/release/bundle/dmg/*.dmg
             ./src-tauri/target/release/NutsClient.exe
 
   release:
@@ -75,8 +70,8 @@ jobs:
 
       - name: Package macOS binary for release
         run: |
-          cd ./macos-latest/bundle/macos/
-          tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.app
+          cd ./macos-latest/bundle/dmg/
+          tar -czvf Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz ./*.dmg
 
       - name: Package linux binary for release
         run: |
@@ -111,5 +106,5 @@ jobs:
             macOS sometimes marks downloaded files as coming from an untrusted source, and this can prevent the app from launching properly. Running the `xattr` command clears those flags and allows the app to function normally.
           files: |
             ubuntu-latest/Nuts_${{ github.event.inputs.version }}_Linux_Release.tar.gz
-            macos-latest/bundle/macos/Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz
+            macos-latest/bundle/dmg/Nuts_${{ github.event.inputs.version }}_macOS_Release.tar.gz
             windows-latest/Nuts_${{ github.event.inputs.version }}_Windows_Release.zip
