@@ -1,7 +1,6 @@
 import SideBar from "@/components/sidebar/sidebar";
 import TitleBar from "@/components/titlebar/titlebar";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface LayoutProps {
     children: React.ReactNode;

@@ -2,7 +2,7 @@
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { RootState } from "@/redux/store";
-import { useMemo, useCallback, useRef, useEffect, useState, use } from "react";
+import { useMemo, useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileContent, setLastResponse } from "@/redux/slices/projectFile";
 import { sendNatsMessage } from "@/services/natsWrapper";

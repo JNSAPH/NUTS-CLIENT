@@ -1,5 +1,4 @@
 import { isUpdateAvailableResponse, UpdateCheckResponse } from "@/types/UpdateStuff";
-import Logger from "./logging";
 
 const packageJSON = require("../../package.json");
 
