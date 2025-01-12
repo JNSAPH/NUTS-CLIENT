@@ -27,6 +27,8 @@ const projectFileSlice = createSlice({
                 state.fileContent = action.payload;
             } else {
                 state.fileContent = action.payload;
+                console.log("state.filePath", action.payload);
+                
                 saveProjectFile(action.payload, state.filePath!);
             }
         },

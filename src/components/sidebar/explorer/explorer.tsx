@@ -18,6 +18,10 @@ function SidebarItem(params: SidebarItemProps) {
     const dispatch = useDispatch();
     const content = useSelector((state: RootState) => state.projectFile);
 
+    // State to track edit mode and input value
+    const [isEditing, setIsEditing] = React.useState(false);
+    const [inputValue, setInputValue] = React.useState(params.name);
+
     async function removeRequest() {
         if (content.fileContent) {
             const answer = await ask('This action cannot be reverted. Are you sure?', {
@@ -25,7 +29,6 @@ function SidebarItem(params: SidebarItemProps) {
                 kind: 'warning',
             });
 
-            // If the user cancels the operation, return
             if (!answer) return;
 
             dispatch(setFileContent({
@@ -35,17 +38,74 @@ function SidebarItem(params: SidebarItemProps) {
         }
     }
 
+    const handleDoubleClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+    const selectedRequest = useSelector((state: RootState) => state.projectFile.fileContent?.requests[state.projectFile.selectedRequestIndex]);
+
+    const handleInputBlur = () => {
+        setIsEditing(false);
+        if (selectedRequest && content.fileContent) {
+        if (inputValue.trim()) {
+            console.log("inputValue", inputValue);
+            dispatch(
+                setFileContent({
+                  ...content.fileContent,
+                  requests: content.fileContent.requests.map((request, index) => {
+                    if (index === content.selectedRequestIndex) {
+                      return {
+                        ...selectedRequest,
+                        name: inputValue,
+                      };
+                    }
+                    return request;
+                  }),
+                })
+              );
+            }
+            
+        } else {
+            setInputValue(params.name); // Revert to original name if input is empty
+        }
+    };
+
+    const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleInputBlur(); // Save changes on Enter key
+        }
+    };
+
     return (
-        <div className={`flex items-center space-x-2 p-1 rounded-md hover:bg-clientColors-card-background transition-all justify-between cursor-pointer ${params.active ? "bg-clientColors-card-background" : ""}`} onClick={() => dispatch(setSelectedRequestIndex(params.index))}>
-            <p>{params.name}</p>
+        <div
+            className={`flex items-center space-x-2 p-1 rounded-md hover:bg-clientColors-card-background transition-all justify-between cursor-pointer ${params.active ? "bg-clientColors-card-background" : ""}`}
+            onClick={() => dispatch(setSelectedRequestIndex(params.index))}
+        >
+            {isEditing ? (
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    onKeyDown={handleInputKeyDown}
+                    autoFocus
+                    className="bg-clientColors-card-background border border-clientColors-card-border w-full"
+                />
+            ) : (
+                <p onDoubleClick={handleDoubleClick}>{params.name}</p>
+            )}
             {params.active ? (
-                <div className='flex space-x-2' onClick={removeRequest} >
-                    <IcoBin size={18} color='#D8323D'/>
+                <div className='flex space-x-2' onClick={removeRequest}>
+                    <IcoBin size={18} color='#D8323D' />
                 </div>
             ) : null}
         </div>
     );
 }
+
 
 export default function ExplorerSideBar() {
     const content = useSelector((state: RootState) => state.projectFile);

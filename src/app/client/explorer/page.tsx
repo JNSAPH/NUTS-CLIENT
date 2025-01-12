@@ -2,11 +2,12 @@
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { RootState } from "@/redux/store";
-import { useMemo, useCallback, useRef, useEffect, useState } from "react";
+import { useMemo, useCallback, useRef, useEffect, useState, use } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileContent, setLastResponse } from "@/redux/slices/projectFile";
 import { sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
+import { setTitle } from "@/redux/slices/windowProperties";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
@@ -25,6 +26,11 @@ export default function Page() {
     }),
     []
   );
+
+  useEffect(() => {
+    dispatch(setTitle("NUTS - " + content.fileContent?.name));
+  }, [content.selectedRequestIndex]);
+
 
   // Function to format JSON
   const formatJson = (jsonString: string) => {
