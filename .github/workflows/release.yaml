@@ -33,8 +33,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y software-properties-common
           sudo add-apt-repository universe
+          sudo add-apt-repository ppa:webkit-team/ppa
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.0-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            build-essential \
+            curl \
+            wget
 
 
       - name: Rust cache
