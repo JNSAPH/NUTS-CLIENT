@@ -93,10 +93,10 @@ function SidebarItem(params: SidebarItemProps) {
                     onBlur={handleInputBlur}
                     onKeyDown={handleInputKeyDown}
                     autoFocus
-                    className="bg-clientColors-card-background border border-clientColors-card-border w-full"
+                    className="bg-clientColors-card-background border text-sm border-clientColors-card-border w-full"
                 />
             ) : (
-                <p onDoubleClick={handleDoubleClick}>{params.name}</p>
+                <p onDoubleClick={handleDoubleClick} className='text-sm'>{params.name}</p>
             )}
             {params.active ? (
                 <div className='flex space-x-2' onClick={removeRequest}>
