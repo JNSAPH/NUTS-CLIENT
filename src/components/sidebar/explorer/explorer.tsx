@@ -7,6 +7,7 @@ import { RootState } from '@/redux/store';
 import { createProjectFile, openProjectFile } from '@/services/fileManager';
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from '@/components/ui/context-menu';
 
 interface SidebarItemProps {
     name: string;
@@ -38,6 +39,18 @@ function SidebarItem(params: SidebarItemProps) {
         }
     }
 
+    async function cloneRequest() {
+        if (content.fileContent) {
+            dispatch(setFileContent({
+                ...content.fileContent,
+                requests: [
+                    ...content.fileContent.requests,
+                    content.fileContent.requests[params.index],
+                ],
+            }));
+        }
+    }
+
     const handleDoubleClick = () => {
         setIsEditing(true);
     };
@@ -51,23 +64,23 @@ function SidebarItem(params: SidebarItemProps) {
     const handleInputBlur = () => {
         setIsEditing(false);
         if (selectedRequest && content.fileContent) {
-        if (inputValue.trim()) {
-            dispatch(
-                setFileContent({
-                  ...content.fileContent,
-                  requests: content.fileContent.requests.map((request, index) => {
-                    if (index === content.selectedRequestIndex) {
-                      return {
-                        ...selectedRequest,
-                        name: inputValue,
-                      };
-                    }
-                    return request;
-                  }),
-                })
-              );
+            if (inputValue.trim()) {
+                dispatch(
+                    setFileContent({
+                        ...content.fileContent,
+                        requests: content.fileContent.requests.map((request, index) => {
+                            if (index === content.selectedRequestIndex) {
+                                return {
+                                    ...selectedRequest,
+                                    name: inputValue,
+                                };
+                            }
+                            return request;
+                        }),
+                    })
+                );
             }
-            
+
         } else {
             setInputValue(params.name); // Revert to original name if input is empty
         }
@@ -80,29 +93,44 @@ function SidebarItem(params: SidebarItemProps) {
     };
 
     return (
-        <div
-            className={`flex items-center space-x-2 p-1 rounded-md hover:bg-clientColors-card-background transition-all justify-between cursor-pointer ${params.active ? "bg-clientColors-card-background" : ""}`}
-            onClick={() => dispatch(setSelectedRequestIndex(params.index))}
-        >
-            {isEditing ? (
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    onBlur={handleInputBlur}
-                    onKeyDown={handleInputKeyDown}
-                    autoFocus
-                    className="bg-clientColors-card-background border text-sm border-clientColors-card-border w-full"
-                />
-            ) : (
-                <p onDoubleClick={handleDoubleClick} className='text-sm'>{params.name}</p>
-            )}
-            {params.active ? (
-                <div className='flex space-x-2' onClick={removeRequest}>
-                    <IcoBin size={18} color='#D8323D' />
-                </div>
-            ) : null}
-        </div>
+        <ContextMenu>
+            <ContextMenuTrigger>
+            <div
+                className={`flex items-center space-x-2 p-1 rounded-md hover:bg-clientColors-card-background transition-all justify-between cursor-pointer ${params.active ? "bg-clientColors-card-background" : ""}`}
+                onClick={() => dispatch(setSelectedRequestIndex(params.index))}>
+                {isEditing ? (
+                    <input
+                        type="text"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onBlur={handleInputBlur}
+                        onKeyDown={handleInputKeyDown}
+                        autoFocus
+                        className="bg-clientColors-card-background border text-sm border-clientColors-card-border w-full"
+                    />
+                ) : (
+                    <p onDoubleClick={handleDoubleClick} className='text-sm'>{params.name}</p>
+                )}
+                {params.active ? (
+                    <div className='flex space-x-2' onClick={removeRequest}>
+                        
+                    </div>
+                ) : null}
+            </div>
+            </ContextMenuTrigger>
+                <ContextMenuContent className="w-64">
+                    <ContextMenuItem onClick={() => cloneRequest()}>
+                        Clone Request
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => setIsEditing(true)}>
+                        Rename Request
+                    </ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem className='text-red-500 space-x-2 focus:bg-[#1e0a0a]' onClick={removeRequest}>
+                        <p>Delete Request</p>
+                    </ContextMenuItem>
+                </ContextMenuContent>
+        </ContextMenu>
     );
 }
 
@@ -149,15 +177,15 @@ export default function ExplorerSideBar() {
         setIsEditingProjectName(false);
         if (projectNameInput.trim() && projectNameInput !== content.fileContent?.name) {
             // Update the project name in the Redux store
-            if(content.fileContent) {
-            dispatch(
-                setFileContent({
-                  ...content.fileContent,
-                  name: projectNameInput || "",
-                })
-              );
+            if (content.fileContent) {
+                dispatch(
+                    setFileContent({
+                        ...content.fileContent,
+                        name: projectNameInput || "",
+                    })
+                );
             }
-            
+
         } else {
             setProjectNameInput(content.fileContent?.name || ""); // Revert to the original name
         }
