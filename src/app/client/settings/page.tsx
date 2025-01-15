@@ -18,18 +18,29 @@ export default function Page() {
       <p>Nuts Version {packageJSON.version}</p>
       <hr className="border border-clientColors-card-border"/>
       <div className="space-y-4">
-      <div className="flex items-center space-x-2">
+
+      <div className="flex flex-col space-y-2">
+        <Label htmlFor="airplane-mode">Hide Update Notifications</Label>
         <Switch id="airplane-mode" onCheckedChange={(state) => {
           dispatch(setClientSettings({
             ...content.clientSettings,
             hideUpdateNotifications: state
           }))
         }}/>
-        <Label htmlFor="airplane-mode">Hide Update Notifications</Label>
+      </div>
+
+      <div className="flex flex-col space-y-2">
+        <Label>Default NATS URL</Label>
+        <input type="text" value={content.clientSettings.defaultNATSURL} onChange={(e) => {
+          dispatch(setClientSettings({
+            ...content.clientSettings,
+            defaultNATSURL: e.target.value
+          }))
+        }} className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"/>
       </div>
       
       <div className="flex items-center space-x-2">
-        <Label onClick={async () => { clearPersistedData(); window.location.reload(); }}>Clear Persistant Data</Label>
+        <Label onClick={async () => { clearPersistedData(); window.location.reload(); }}  className="text-red-500 cursor-pointer">Clear Persistant Data</Label>
       </div>
 
       </div>

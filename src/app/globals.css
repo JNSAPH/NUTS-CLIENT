@@ -32,14 +32,19 @@
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  overscroll-behavior: contain;
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+
+  overscroll-behavior: none;
+  overflow: hidden;
 }
 
 body {
+  color: var(--foreground);
+  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 

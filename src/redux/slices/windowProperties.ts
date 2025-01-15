@@ -20,6 +20,7 @@ const initialState: WindowPropertiesState = {
   updateInfo: null,
   clientSettings: {
     hideUpdateNotifications: false,
+    defaultNATSURL: 'nats://127.0.0.1:4222'
   }
 };
 

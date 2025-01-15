@@ -8,6 +8,7 @@ import { setFileContent, setLastResponse } from "@/redux/slices/projectFile";
 import { sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
+import { IcoPlusBorder } from "@/components/Icons";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
@@ -91,11 +92,19 @@ export default function Page() {
   // If no request is selected, show the message
   if (!selectedRequest || !content.fileContent) {
     return (
-      <div className="p-4">
-        <pre>No request selected</pre>
+      <div className="p-4 flex flex-col h-full">
+        <pre className="whitespace-pre-wrap">
+          Ready to get started? (ง •̀_•́)ง
+        </pre>
+        <pre className="whitespace-pre-wrap"> 
+          Select a request from the sidebar or create a new one by clicking <span className="inline-flex align-sub"><IcoPlusBorder size={16} />.</span>
+        </pre>
+
       </div>
     );
   }
+
+
 
   async function handleSendRequest() {
     if (!selectedRequest) return;

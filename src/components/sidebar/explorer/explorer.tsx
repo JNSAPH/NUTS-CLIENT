@@ -137,6 +137,7 @@ function SidebarItem(params: SidebarItemProps) {
 
 export default function ExplorerSideBar() {
     const content = useSelector((state: RootState) => state.projectFile);
+    const settings = useSelector((state: RootState) => state.windowProperties.clientSettings);
     const [isEditingProjectName, setIsEditingProjectName] = React.useState(false);
     const [projectNameInput, setProjectNameInput] = React.useState(content.fileContent?.name || "");
     const dispatch = useDispatch();
@@ -204,8 +205,8 @@ export default function ExplorerSideBar() {
                 requests: [
                     ...content.fileContent.requests,
                     {
-                        name: "New Request",
-                        url: "",
+                        name: "Untitled Request",
+                        url: settings.defaultNATSURL,
                         data: "",
                         topic: "",
                     },
