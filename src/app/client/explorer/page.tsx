@@ -103,7 +103,7 @@ export default function Page() {
     try {
       const response = await sendNatsMessage(selectedRequest?.url, selectedRequest?.topic, selectedRequest?.data);
       dispatch(setLastResponse(JSON.stringify(response, null, 2)));
-    } catch (error) {    
+    } catch (error) {
       Logger.error("Failed to send request", error);
       dispatch(setLastResponse(JSON.stringify(error, null, 2)));
     }
@@ -151,11 +151,11 @@ export default function Page() {
           </ResizablePanel>
           <ResizableHandle className="border border-clientColors-windowBorder" />
           <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={25}>
-            <div className="p-4 w-full h-full space-y-2">
-              <p className="font-bold text-xl">Response</p>
+            <div className="p-4 space-y-2 flex flex-col h-full">
+              <p className="font-bold text-xl flex-shrink-0">Response</p>
               <textarea
                 readOnly
-                className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg h-full w-full"
+                className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg flex-grow resize-none "
                 value={formatJson(selectedRequest.lastResponse ? JSON.parse(selectedRequest.lastResponse) : "")}
               />
             </div>

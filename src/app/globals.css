@@ -43,25 +43,25 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
-/* Custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 4px; 
-  height: 4px;
+  width: 7px;
+  height: 7px;
+  cursor: pointer;
+  ;
 }
 
-/* Track (background of the scrollbar) */
-::-webkit-scrollbar-track {
-  background: theme("colors.clientColors.windowBackground")
-}
-
-/* Thumb (scrollbar handle) */
 ::-webkit-scrollbar-thumb {
-  background: theme("colors.clientColors.scrollbarThumb.base");
-  border-radius: 100px;
+  background: #ababab;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  cursor: auto
 }
 
-/* Hover state for the thumb */
-::-webkit-scrollbar-thumb:hover {
-  background: theme("colors.clientColors.scrollbarThumb.hover");
+::-webkit-scrollbar-thumb:hover{
+  border: 0;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }
