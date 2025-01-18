@@ -21,9 +21,11 @@ function App({ children }: { children: ReactNode }) {
             unlistenRef.current = getCurrentWindow().onCloseRequested(async (e) => {
                 const currentState = store.getState();
                 if (currentState.projectFile.unsavedChanges) {
+                    // Unsaved changes detected. Prompt user to confirm exit
                     Logger.info("RootWrapper", "Unsaved changes detected. Prompting user to confirm exit.");
                     const answer = await confirm("You have unsaved changes. Do you want to save before exiting?");
                     if (answer) {
+                        // Save changes and close window
                         Logger.info("RootWrapper", "User chose to save changes. Saving changes and closing window.");
                         let result = await saveProjectFile(
                             currentState.projectFile.fileContent!, 
@@ -31,15 +33,17 @@ function App({ children }: { children: ReactNode }) {
                         );
 
                         if (result === "ERROR") {
+                            // Error saving file. Abort window close
                             Logger.error("RootWrapper", "Error saving file. Aborting window close.");
                             e.preventDefault();
                         } else {
+                            // File saved successfully. Close window
                             getCurrentWindow().close();
                         }
 
                         getCurrentWindow().close();
                     } else {
-                        e.preventDefault();
+                        // Discard changes and close window
                         Logger.info("RootWrapper", "User chose to discard changes. Closing window.");
                     }
                 }
