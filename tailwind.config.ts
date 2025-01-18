@@ -39,11 +39,14 @@ export default {
             red: "#FF7780",
           }
         },
+        cshadcn: {
+          switchActiveBg: "#f3f3f3",
+        },
         shadcn: {
           border: "#2d2d2e",
-          input: "hsl(var(--input))",
+          input: "#1e1e1e",
           ring: "hsl(var(--ring))",
-          background: "hsl(var(--background))",
+          background: "#4a4a4a", 
           foreground: "hsl(var(--foreground))",
           primary: {
             DEFAULT: "hsl(var(--primary))",

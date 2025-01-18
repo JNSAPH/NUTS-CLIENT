@@ -127,6 +127,9 @@
     "fs:write-all",
     "fs:write-files",
     "fs:default",
-    "dialog:default"
+    "dialog:default",
+    "shell:default",
+    "opener:default",
+    "opener:allow-open-path"
   ]
 }

@@ -6,6 +6,7 @@ import { AvailableTabs, setSelectedTab } from '@/redux/slices/windowProperties';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';  // Adjust if necessary
 import { redirect } from 'next/navigation'
+import { openPath } from '@tauri-apps/plugin-opener';
 
 interface SideBarItemProps {
     icon: React.ReactNode;
@@ -53,6 +54,7 @@ function UpdateAvailableItem() {
         return (
             <div className='relative flex items-center justify-center w-full h-[48px] bg-clientColors-button-background hover:bg-clientColors-button-hover cursor-pointer' onClick={() => {
                 window.open(reduxState.updateInfo?.html_url, '_blank'); // Move this to open in the default browser @TODO
+                // if (reduxState.updateInfo?.html_url) openPath(reduxState.updateInfo?.html_url!);
             }}>
                 {/* Icon */}
                 <div className="relative">
