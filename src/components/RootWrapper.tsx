@@ -25,10 +25,18 @@ function App({ children }: { children: ReactNode }) {
                     const answer = await confirm("You have unsaved changes. Do you want to save before exiting?");
                     if (answer) {
                         Logger.info("RootWrapper", "User chose to save changes. Saving changes and closing window.");
-                        await saveProjectFile(
+                        let result = await saveProjectFile(
                             currentState.projectFile.fileContent!, 
                             currentState.projectFile.filePath!
                         );
+
+                        if (result === "ERROR") {
+                            Logger.error("RootWrapper", "Error saving file. Aborting window close.");
+                            e.preventDefault();
+                        } else {
+                            getCurrentWindow().close();
+                        }
+
                         getCurrentWindow().close();
                     } else {
                         e.preventDefault();

@@ -89,9 +89,9 @@ export async function getProjectFileContent(filePath: string): Promise<ProjectFi
     }
 }
 
-export async function saveProjectFile(content: ProjectFile, filePath: string) {
+export async function saveProjectFile(content: ProjectFile, filePath: string): Promise<"ERROR" | "SUCCESS"> {
     try {
-        if (!filePath) { return; }
+        if (!filePath) { return "ERROR"; }
 
         // Create a shallow copy of the content to modify it
         const contentCopy = { ...content };
@@ -109,7 +109,7 @@ export async function saveProjectFile(content: ProjectFile, filePath: string) {
 
         Logger.info("saveFile", "File saved successfully");
 
-        throw new Error("Error saving file");
+        return "SUCCESS"
 
     } catch (error) {
         await message(
@@ -117,6 +117,8 @@ export async function saveProjectFile(content: ProjectFile, filePath: string) {
             { title: "Error Saving File", kind: "error" }
         );        
         Logger.error("saveFile", "Error saving file: ", error);
+
+        return "ERROR";
     }
 }
 
