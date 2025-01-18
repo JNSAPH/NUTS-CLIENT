@@ -7,12 +7,15 @@ interface ProjectFileState {
     fileContent: ProjectFile | null;
     
     selectedRequestIndex: number;
+
+    unsavedChanges: boolean;
 }
 
 const initialState: ProjectFileState = {
     filePath: null,
     fileContent: null,
     selectedRequestIndex: -1,
+    unsavedChanges: false,
 };
 
 const projectFileSlice = createSlice({
@@ -24,11 +27,10 @@ const projectFileSlice = createSlice({
         },
         setFileContent: (state, action: PayloadAction<ProjectFile | null>) => {
             if (action.payload === null) {
-                state.fileContent = action.payload;
+                state.fileContent = null;
             } else {
+                state.unsavedChanges = true;
                 state.fileContent = action.payload;
-                
-                saveProjectFile(action.payload, state.filePath!);
             }
         },
         setSelectedRequestIndex: (state, action: PayloadAction<number>) => {
@@ -38,9 +40,12 @@ const projectFileSlice = createSlice({
             if (state.fileContent) {
                 state.fileContent.requests[state.selectedRequestIndex].lastResponse = action.payload;
             }
+        },
+        setUnsavedChanges: (state, action: PayloadAction<boolean>) => {
+            state.unsavedChanges = action.payload;
         }
     },
 });
 
-export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse } = projectFileSlice.actions;
+export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse, setUnsavedChanges } = projectFileSlice.actions;
 export default projectFileSlice.reducer;

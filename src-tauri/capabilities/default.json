@@ -17,6 +17,7 @@
     "core:window:allow-set-title",
     "core:window:allow-set-resizable",
     "core:window:allow-center",
+    "core:window:allow-destroy",
     "dialog:default",
     "fs:allow-app-read",
     "fs:allow-app-read-recursive",

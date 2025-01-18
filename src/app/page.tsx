@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import Logger from "@/services/logging";
 import { isUpdateAvailable } from "@/services/updateCheck";
 import { useDispatch, useSelector } from "react-redux";
-import { setClientSettings, setUpdateInfo } from "@/redux/slices/windowProperties";
+import { setClientSettings, setSelectedTab, setUpdateInfo } from "@/redux/slices/windowProperties";
 import { RootState } from "@/redux/store";
 
 const window = getCurrentWindow();
@@ -14,9 +14,7 @@ const window = getCurrentWindow();
 export default function Home() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-
-  const reduxState = useSelector((state: RootState) => state);
-
+  
   useEffect(() => {
     async function startClient() {
       Logger.info("Starting client...");
@@ -47,6 +45,7 @@ export default function Home() {
       await setIsLoading(false);
 
       // Redirect to explorer
+      dispatch(setSelectedTab("explorer"));
       redirect("/client/explorer");
     }
 

@@ -1,7 +1,9 @@
-import { open as openFileDialog, save as saveFileDialog } from '@tauri-apps/plugin-dialog';
+import { message, open as openFileDialog, save as saveFileDialog } from '@tauri-apps/plugin-dialog';
 import { exists, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import Logger from '@/services/logging';
 import { ProjectFile } from '@/types/ProjectFile';
+import { store } from '@/redux/store';
+import { setUnsavedChanges } from '@/redux/slices/projectFile';
 
 enum Event {
     CANCELED = "CANCELED",
@@ -22,7 +24,6 @@ export async function openProjectFile(): Promise<[string, ProjectFile] | Event> 
     }
 
     try {
-
         // Check if the file exists
         const fileExists = await exists(filePath);
 
@@ -92,19 +93,33 @@ export async function saveProjectFile(content: ProjectFile, filePath: string) {
     try {
         if (!filePath) { return; }
 
-        content.requests = content.requests.map((request) => {
-            delete request.lastResponse;
-            return request;
+        // Create a shallow copy of the content to modify it
+        const contentCopy = { ...content };
+        
+        // Create a shallow copy of requests to modify it
+        contentCopy.requests = contentCopy.requests.map((request) => {
+            const requestCopy = { ...request };
+            delete requestCopy.lastResponse;
+            return requestCopy;
         });
 
-        await writeTextFile(filePath, JSON.stringify(content, null, 2));
-        await getProjectFileContent(filePath); // This is for testing purposes
+        await writeTextFile(filePath, JSON.stringify(contentCopy, null, 2));
 
+        await store.dispatch(setUnsavedChanges(false));
+
+        Logger.info("saveFile", "File saved successfully");
+
+        throw new Error("Error saving file");
 
     } catch (error) {
+        await message(
+            "An error occurred while trying to save the file. Your changes might not have been saved. Please try again. If the issue continues, open an Issue on Github for assistance.",
+            { title: "Error Saving File", kind: "error" }
+        );        
         Logger.error("saveFile", "Error saving file: ", error);
     }
 }
+
 
 function checkFileFormat(fileContent: string): ProjectFile | null {
     try {

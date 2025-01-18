@@ -2,7 +2,7 @@
 
 import { IcoBin, IcoPlusBorder } from '@/components/Icons';
 import { ask } from '@tauri-apps/plugin-dialog';
-import { setFileContent, setFilePath, setSelectedRequestIndex } from '@/redux/slices/projectFile';
+import { setFileContent, setFilePath, setSelectedRequestIndex, setUnsavedChanges } from '@/redux/slices/projectFile';
 import { RootState } from '@/redux/store';
 import { createProjectFile, openProjectFile } from '@/services/fileManager';
 import React from 'react';
@@ -153,6 +153,7 @@ export default function ExplorerSideBar() {
             const [filePath, fileContent] = result;
             dispatch(setFileContent(fileContent));
             dispatch(setFilePath(filePath));
+            dispatch(setUnsavedChanges(false)); // Opening a file doesn't change the file content
         }
     }
 
