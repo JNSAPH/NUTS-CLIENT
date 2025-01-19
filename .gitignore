@@ -1,2 +1,4 @@
 node_modules
 .next
+src-tauri
+next-env.d.ts
