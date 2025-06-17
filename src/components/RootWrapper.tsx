@@ -10,6 +10,7 @@ import Logger from '@/services/logging';
 import { saveProjectFile } from '@/services/fileManager';
 import { UnlistenFn } from '@tauri-apps/api/event';
 import ReduxDevTool from './devtools/reduxTool';
+import { ask } from '@tauri-apps/plugin-dialog';
 
 function App({ children }: { children: ReactNode }) {
     const state = useSelector((state: RootState) => state);
@@ -23,7 +24,7 @@ function App({ children }: { children: ReactNode }) {
                 if (currentState.projectFile.unsavedChanges) {
                     // Unsaved changes detected. Prompt user to confirm exit
                     Logger.info("RootWrapper", "Unsaved changes detected. Prompting user to confirm exit.");
-                    const answer = await confirm("You have unsaved changes. Do you want to save before exiting?");
+                    const answer = await ask("You have unsaved changes. Do you want to save before exiting?");
                     if (answer) {
                         // Save changes and close window
                         Logger.info("RootWrapper", "User chose to save changes. Saving changes and closing window.");
