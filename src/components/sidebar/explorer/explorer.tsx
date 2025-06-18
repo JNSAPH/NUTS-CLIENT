@@ -210,6 +210,9 @@ export default function ExplorerSideBar() {
                         url: settings.defaultNATSURL,
                         data: "",
                         topic: "",
+                        authentication: {
+                            type: 'NONE'
+                        }
                     },
                 ],
             }));

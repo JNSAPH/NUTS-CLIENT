@@ -8,7 +8,8 @@ import { setFileContent, setLastResponse } from "@/redux/slices/projectFile";
 import { sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
-import { IcoPlusBorder } from "@/components/Icons";
+import { IcoLock, IcoPlusBorder } from "@/components/Icons";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
@@ -96,15 +97,13 @@ export default function Page() {
         <pre className="whitespace-pre-wrap">
           Ready to get started? (ง •̀_•́)ง
         </pre>
-        <pre className="whitespace-pre-wrap"> 
+        <pre className="whitespace-pre-wrap">
           Select a request from the sidebar or create a new one by clicking <span className="inline-flex align-sub"><IcoPlusBorder size={16} />.</span>
         </pre>
 
       </div>
     );
   }
-
-
 
   async function handleSendRequest() {
     if (!selectedRequest) return;
@@ -122,12 +121,29 @@ export default function Page() {
     <ResizablePanelGroup direction="vertical" storage={ExplorerContent} autoSaveId={saveId + "_parent"}>
       <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={15} className="flex flex-col justify-center mx-4">
         <p className="font-bold text-sm">NATS Server</p>
-        <input
-          type="text"
-          value={selectedRequest?.url}
-          onChange={(e) => handleChange(e, "url")}
-          className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg"
-        />
+        <div className="flex items-center space-x-2 w-full">
+          <input
+            type="text"
+            value={selectedRequest?.url}
+            onChange={(e) => handleChange(e, "url")}
+            className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+          />
+          <Dialog>
+            <DialogTrigger className="bg-clientColors-button-background h-full aspect-square rounded-lg border border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover active:bg-clientColors-card-border flex items-center justify-center">
+              <IcoLock size={16} />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>NATS Authentication</DialogTitle>
+                <DialogDescription>
+                  <pre>
+                    {JSON.stringify(selectedRequest || {}, null, 2)}
+                  </pre>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
       </ResizablePanel>
       <ResizableHandle className="border border-clientColors-windowBorder" />
       <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={85}>

@@ -55,6 +55,21 @@ export default function TitleBar() {
                 <div data-tauri-drag-region className="flex items-center px-1 gap-1">
                     <Item onClick={openFile} text="Open File" />
                     <Item onClick={saveFile} text="Save File" disabled={!state.projectFile.unsavedChanges}/>
+                    {/* 
+                    <Menubar>
+                        <MenubarMenu>
+                            <MenubarTrigger>File</MenubarTrigger>
+                            <MenubarContent>
+                                <MenubarItem onClick={openFile}>
+                                    Open File <MenubarShortcut>⌘O</MenubarShortcut>
+                                </MenubarItem>
+                                <MenubarItem onClick={saveFile} disabled={!state.projectFile.unsavedChanges}>
+                                    Save File <MenubarShortcut>⌘S</MenubarShortcut>
+                                </MenubarItem>
+                            </MenubarContent>
+                        </MenubarMenu>
+                    </Menubar>
+                    */}
                 </div>
                 <div data-tauri-drag-region className="flex items-center justify-center">
                     {state.windowProperties.title}

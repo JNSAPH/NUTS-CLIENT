@@ -10,5 +10,8 @@ interface Request {
     topic: string;
     data: string;
     lastResponse?: string;
+    authentication?: {
+        type: "NONE" | "JWT" | "USERNAME_PASSWORD";
+    };
     //headers: Header[];
 }
