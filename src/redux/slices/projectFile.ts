@@ -1,11 +1,12 @@
 import { saveProjectFile } from '@/services/fileManager';
+import { AuthTypes } from '@/types/Auth';
 import { ProjectFile } from '@/types/ProjectFile';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ProjectFileState {
     filePath: string | null;
     fileContent: ProjectFile | null;
-    
+
     selectedRequestIndex: number;
 
     unsavedChanges: boolean;
@@ -43,9 +44,49 @@ const projectFileSlice = createSlice({
         },
         setUnsavedChanges: (state, action: PayloadAction<boolean>) => {
             state.unsavedChanges = action.payload;
+        },
+        setAuthenticationType: (
+            state,
+            action: PayloadAction<AuthTypes>
+        ) => {
+            if (state.fileContent) {
+                const request = state.fileContent.requests[state.selectedRequestIndex];
+                if (request) {
+                    if (!request.authentication) {
+                        request.authentication = { type: action.payload };
+                    } else {
+                        request.authentication.type = action.payload;
+                    }
+                    state.unsavedChanges = true;
+                }
+            }
+        },
+        setNATSToken: (
+            state,
+            action: PayloadAction<string>
+        ) => {
+            if (state.fileContent) {
+                const request = state.fileContent.requests[state.selectedRequestIndex];
+                if (request && request.authentication?.type === AuthTypes.TOKEN) {
+                    request.authentication.token = action.payload;
+                    state.unsavedChanges = true;
+                }
+            }
+        },
+        setUsernamePassword: (
+            state,
+            action: PayloadAction<{ username: string; password: string }>
+        ) => { 
+            if (state.fileContent) {
+                const request = state.fileContent.requests[state.selectedRequestIndex];
+                if (request && request.authentication?.type === AuthTypes.USERPASSWORD) {
+                    request.authentication.usernamepassword = action.payload;
+                    state.unsavedChanges = true;
+                }
+            }
         }
     },
 });
 
-export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse, setUnsavedChanges } = projectFileSlice.actions;
+export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse, setUnsavedChanges, setAuthenticationType, setNATSToken, setUsernamePassword } = projectFileSlice.actions;
 export default projectFileSlice.reducer;
