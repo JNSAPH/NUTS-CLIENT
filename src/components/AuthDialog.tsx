@@ -1,3 +1,4 @@
+import React from "react";
 import { IcoLock } from "./Icons";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 
@@ -8,20 +9,12 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-
 interface AuthDialogProps {
     selectedRequest: any | null;
 }
 
 export default function AuthDialog({ selectedRequest }: AuthDialogProps) {
+    const [defaultTab, setDefaultTab] = React.useState("debug");
 
     return (
         <Dialog>
@@ -33,20 +26,18 @@ export default function AuthDialog({ selectedRequest }: AuthDialogProps) {
                     <DialogTitle className="text-2xl font-bold">NATS Authentication</DialogTitle>
                     <DialogDescription>
                         <div className="flex w-full max-w-sm flex-col gap-6">
-                            <Tabs defaultValue="account">
+                            <Tabs defaultValue={defaultTab} onValueChange={(value) => setDefaultTab(value)}>
                                 <TabsList>
                                     <TabsTrigger value="token">Token</TabsTrigger>
                                     <TabsTrigger value="debug">Debug</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="token">
-                                    <p>asdsa</p>
+
                                 </TabsContent>
                                 <TabsContent value="debug">
-
                                     <pre>
                                         {JSON.stringify(selectedRequest || {}, null, 2)}
                                     </pre>
-
                                 </TabsContent>
                             </Tabs>
                         </div>
