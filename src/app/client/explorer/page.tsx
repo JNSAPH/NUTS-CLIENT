@@ -10,6 +10,7 @@ import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
 import { IcoLock, IcoPlusBorder } from "@/components/Icons";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import AuthDialog from "@/components/AuthDialog";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
@@ -128,21 +129,7 @@ export default function Page() {
             onChange={(e) => handleChange(e, "url")}
             className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
           />
-          <Dialog>
-            <DialogTrigger className="bg-clientColors-button-background h-full aspect-square rounded-lg border border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover active:bg-clientColors-card-border flex items-center justify-center">
-              <IcoLock size={16} />
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>NATS Authentication</DialogTitle>
-                <DialogDescription>
-                  <pre>
-                    {JSON.stringify(selectedRequest || {}, null, 2)}
-                  </pre>
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+        <AuthDialog selectedRequest={selectedRequest} />
         </div>
       </ResizablePanel>
       <ResizableHandle className="border border-clientColors-windowBorder" />
