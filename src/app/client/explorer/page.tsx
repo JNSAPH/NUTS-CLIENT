@@ -2,20 +2,24 @@
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { RootState } from "@/redux/store";
-import { useMemo, useCallback, useRef, useEffect } from "react";
+import { useMemo, useCallback, useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFileContent, setLastResponse, setNatsServerURL } from "@/redux/slices/projectFile";
+import { setAuthenticationType, setFileContent, setLastResponse, setNatsServerURL, setNATSToken, setUsernamePassword } from "@/redux/slices/projectFile";
 import { sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
 import { IcoLock, IcoPlusBorder } from "@/components/Icons";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import AuthDialog from "@/components/AuthDialog";
+import * as utils from "@/services/utils";
+import { AuthTypes } from "@/types/Auth";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
   const selectedRequest = useSelector((state: RootState) => state.projectFile.fileContent?.requests[state.projectFile.selectedRequestIndex]);
   const dispatch = useDispatch();
+  const [isEditingNatsUrl, setIsEditingNatsUrl] = useState(false);
+  const [natsUrl, setNatsUrl] = useState(content.fileContent?.requests[content.selectedRequestIndex]?.url || "");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const saveId = "explorercontent";
   const ExplorerContent = useMemo(
@@ -82,6 +86,52 @@ export default function Page() {
     handleAutoResize();
   }, [selectedRequest?.data]);
 
+  useEffect(() => {
+    // Set the initial NATS URL from the selected request
+    if (selectedRequest) {
+      const initialUrl = selectedRequest.url || "";
+      setNatsUrl(initialUrl);
+      dispatch(setNatsServerURL(initialUrl));
+    }
+  }, [selectedRequest, dispatch]);
+
+  useEffect(() => {
+    // Only show the URL without the authentication part when editing
+    if (isEditingNatsUrl) {
+      const url = utils.parseNatsUrl(natsUrl);
+      console.log("url:", url);
+
+      // Don't override the visible input — keep natsUrl as user typed it
+      dispatch(setNatsServerURL(url.url)); // <- stripped URL for internal use
+
+      if (url.token) {
+        dispatch(setNATSToken(url.token));
+        dispatch(setAuthenticationType(AuthTypes.TOKEN));
+      } else if (url.username && url.password) {
+        dispatch(setUsernamePassword({ username: url.username, password: url.password }));
+        dispatch(setAuthenticationType(AuthTypes.USERPASSWORD));
+      }
+    } else {
+      // When not editing, reconstruct the full URL with authentication if available
+      if (selectedRequest) {
+        let fullUrl = selectedRequest.url || "";
+        if (selectedRequest.authentication?.type === AuthTypes.TOKEN && selectedRequest.authentication?.token) {
+          fullUrl = utils.addTokenToNatsUrl(natsUrl, selectedRequest.authentication.token);
+        } else if (selectedRequest.authentication?.type === AuthTypes.USERPASSWORD && selectedRequest.authentication?.usernamepassword?.username && selectedRequest.authentication?.usernamepassword.password) {
+          fullUrl = utils.addUserPassToNatsUrl(natsUrl, selectedRequest.authentication.usernamepassword.username, selectedRequest.authentication.usernamepassword.password);
+        } else if (selectedRequest.authentication?.type === AuthTypes.NONE) {
+          fullUrl = natsUrl; // Just use the URL as is if no authentication
+        } 
+
+        console.log(selectedRequest.authentication?.type);
+        console.log("Full URL:", fullUrl);
+        
+        
+        setNatsUrl(fullUrl);
+      }
+    }
+  }, [isEditingNatsUrl, selectedRequest]);
+
   // If no file is opened, show the message
   if (!content.fileContent) {
     return (
@@ -124,13 +174,17 @@ export default function Page() {
         <p className="font-bold text-sm">NATS Server</p>
         <div className="flex items-center space-x-2 w-full">
           <input
-            type="text"
-            value={selectedRequest?.url}
-            onChange={(e) => {
-              dispatch(setNatsServerURL(e.target.value));
-            }}
-            className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
-          />
+      type="text"
+      value={natsUrl}
+      onChange={(e) => {
+        setNatsUrl(e.target.value);
+        handleChange(e, "url");
+        dispatch(setNatsServerURL(e.target.value));
+      }}
+      onFocus={() => setIsEditingNatsUrl(true)}
+      onBlur={() => setIsEditingNatsUrl(false)}
+      className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+      />
         <AuthDialog selectedRequest={selectedRequest} />
         </div>
       </ResizablePanel>
