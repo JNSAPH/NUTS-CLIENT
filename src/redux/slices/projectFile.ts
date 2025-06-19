@@ -45,6 +45,21 @@ const projectFileSlice = createSlice({
         setUnsavedChanges: (state, action: PayloadAction<boolean>) => {
             state.unsavedChanges = action.payload;
         },
+        setNatsServerURL: (
+            state,
+            action: PayloadAction<string>
+        ) => {
+            if (state.fileContent) {
+                const request = state.fileContent.requests[state.selectedRequestIndex];
+                if (request) {
+                    if (!request.authentication) {
+                        request.authentication = { type: AuthTypes.NONE };
+                    }
+                    request.url = action.payload;
+                    state.unsavedChanges = true;
+                }
+            }
+        },
         setAuthenticationType: (
             state,
             action: PayloadAction<AuthTypes>
@@ -88,5 +103,5 @@ const projectFileSlice = createSlice({
     },
 });
 
-export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse, setUnsavedChanges, setAuthenticationType, setNATSToken, setUsernamePassword } = projectFileSlice.actions;
+export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse, setUnsavedChanges, setAuthenticationType, setNATSToken, setUsernamePassword, setNatsServerURL } = projectFileSlice.actions;
 export default projectFileSlice.reducer;

@@ -4,7 +4,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { RootState } from "@/redux/store";
 import { useMemo, useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFileContent, setLastResponse } from "@/redux/slices/projectFile";
+import { setFileContent, setLastResponse, setNatsServerURL } from "@/redux/slices/projectFile";
 import { sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
@@ -53,7 +53,7 @@ export default function Page() {
         dispatch(
           setFileContent({
             ...content.fileContent,
-            requests: content.fileContent.requests.map((request, index) => {
+            requests: content.fileContent.requests.map((request: any, index: any) => {
               if (index === content.selectedRequestIndex) {
                 return {
                   ...selectedRequest,
@@ -126,7 +126,9 @@ export default function Page() {
           <input
             type="text"
             value={selectedRequest?.url}
-            onChange={(e) => handleChange(e, "url")}
+            onChange={(e) => {
+              dispatch(setNatsServerURL(e.target.value));
+            }}
             className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
           />
         <AuthDialog selectedRequest={selectedRequest} />
