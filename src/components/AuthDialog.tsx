@@ -16,9 +16,10 @@ import { Request } from "@/types/ProjectFile";
 
 interface AuthDialogProps {
     selectedRequest: Request | null;
+    disabled?: boolean;
 }
 
-export default function AuthDialog({ selectedRequest }: AuthDialogProps) {
+export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProps) {
     const [defaultTab, setDefaultTab] = React.useState("debug");
     const [natsToken, setNatsToken] = React.useState("");
     const [usernamePassword, setUsernamePassword] = React.useState({ username: "", password: "" });
@@ -82,7 +83,7 @@ export default function AuthDialog({ selectedRequest }: AuthDialogProps) {
 
     return (
         <Dialog>
-            <DialogTrigger className="bg-clientColors-button-background h-full aspect-square rounded-lg border border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover active:bg-clientColors-card-border flex items-center justify-center">
+            <DialogTrigger className={`bg-clientColors-button-background h-full aspect-square rounded-lg border ${(selectedRequest?.authentication?.type !== AuthTypes.NONE) && !disabled ? "border-blue-500 hover:border-blue-400" : "border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover"} active:bg-clientColors-card-border flex items-center justify-center`} disabled={disabled}>
                 <IcoLock size={16} />
             </DialogTrigger>
             <DialogContent className="min-h-[400px] max-h-[80vh] flex flex-col items-start justify-start ">

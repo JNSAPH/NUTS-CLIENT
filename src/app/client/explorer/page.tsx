@@ -94,44 +94,7 @@ export default function Page() {
       dispatch(setNatsServerURL(initialUrl));
     }
   }, [selectedRequest, dispatch]);
-
-  useEffect(() => {
-    // Only show the URL without the authentication part when editing
-    if (isEditingNatsUrl) {
-      const url = utils.parseNatsUrl(natsUrl);
-      console.log("url:", url);
-
-      // Don't override the visible input — keep natsUrl as user typed it
-      dispatch(setNatsServerURL(url.url)); // <- stripped URL for internal use
-
-      if (url.token) {
-        dispatch(setNATSToken(url.token));
-        dispatch(setAuthenticationType(AuthTypes.TOKEN));
-      } else if (url.username && url.password) {
-        dispatch(setUsernamePassword({ username: url.username, password: url.password }));
-        dispatch(setAuthenticationType(AuthTypes.USERPASSWORD));
-      }
-    } else {
-      // When not editing, reconstruct the full URL with authentication if available
-      if (selectedRequest) {
-        let fullUrl = selectedRequest.url || "";
-        if (selectedRequest.authentication?.type === AuthTypes.TOKEN && selectedRequest.authentication?.token) {
-          fullUrl = utils.addTokenToNatsUrl(natsUrl, selectedRequest.authentication.token);
-        } else if (selectedRequest.authentication?.type === AuthTypes.USERPASSWORD && selectedRequest.authentication?.usernamepassword?.username && selectedRequest.authentication?.usernamepassword.password) {
-          fullUrl = utils.addUserPassToNatsUrl(natsUrl, selectedRequest.authentication.usernamepassword.username, selectedRequest.authentication.usernamepassword.password);
-        } else if (selectedRequest.authentication?.type === AuthTypes.NONE) {
-          fullUrl = natsUrl; // Just use the URL as is if no authentication
-        } 
-
-        console.log(selectedRequest.authentication?.type);
-        console.log("Full URL:", fullUrl);
-        
-        
-        setNatsUrl(fullUrl);
-      }
-    }
-  }, [isEditingNatsUrl, selectedRequest]);
-
+  
   // If no file is opened, show the message
   if (!content.fileContent) {
     return (
@@ -181,11 +144,18 @@ export default function Page() {
         handleChange(e, "url");
         dispatch(setNatsServerURL(e.target.value));
       }}
-      onFocus={() => setIsEditingNatsUrl(true)}
-      onBlur={() => setIsEditingNatsUrl(false)}
       className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
       />
-        <AuthDialog selectedRequest={selectedRequest} />
+<AuthDialog 
+  selectedRequest={selectedRequest} 
+  disabled={
+    (() => {
+      const url = utils.parseNatsUrl(natsUrl);
+      return !!(url.token || (url.username && url.password));
+    })()
+  }
+/>
+
         </div>
       </ResizablePanel>
       <ResizableHandle className="border border-clientColors-windowBorder" />
