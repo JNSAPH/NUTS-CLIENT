@@ -8,6 +8,11 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { AuthTypes } from "@/types/Auth";
 import { useDispatch } from "react-redux";
 import { setAuthenticationType, setNATSToken, setUsernamePassword as setUsernamePasswordAction } from "@/redux/slices/projectFile";
@@ -83,9 +88,30 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
 
     return (
         <Dialog>
-            <DialogTrigger className={`bg-clientColors-button-background h-full aspect-square rounded-lg border ${(selectedRequest?.authentication?.type !== AuthTypes.NONE) && !disabled ? "border-blue-500 hover:border-blue-400" : "border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover"} active:bg-clientColors-card-border flex items-center justify-center`} disabled={disabled}>
-                <IcoLock size={16} />
-            </DialogTrigger>
+            <Tooltip>
+                <TooltipTrigger asChild>
+
+                    <DialogTrigger
+                        className={`bg-clientColors-button-background h-full aspect-square rounded-lg border
+    ${selectedRequest?.authentication?.type !== AuthTypes.NONE && !disabled
+                                ? "border-blue-500 hover:border-blue-400"
+                                : "border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover"
+                            }
+    active:bg-clientColors-card-border flex items-center justify-center
+    ${disabled ? "opacity-40 cursor-not-allowed" : "opacity-100 cursor-pointer"}
+  `}
+                        disabled={disabled}
+                        title={disabled ? "This feature is disabled because no authentication is selected." : undefined}
+                    >
+                        <IcoLock size={16} />
+                    </DialogTrigger>
+                </TooltipTrigger>
+                {disabled && (
+                                    <TooltipContent className="mr-4">
+                    <p>Remove the Authentication part from the NATS URL to enable the Authentication Menu</p>
+                </TooltipContent>
+                    )}
+            </Tooltip>
             <DialogContent className="min-h-[400px] max-h-[80vh] flex flex-col items-start justify-start ">
                 <DialogHeader className="space-y-0">
                     <DialogTitle className="text-2xl font-bold">NATS Authentication</DialogTitle>
@@ -135,11 +161,11 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                     </Tabs>
                 </div>
                 {selectedRequest?.authentication?.type !== AuthTypes.NONE && (
-                <DialogFooter className="flex flex-col items-end justify-end w-full mt-4">
-                    <p className="text-xs text-red-500">
-                    <b>Warning:</b> Auth details are saved to the Project File and may appear in source control. Avoid committing sensitive info. A privacy option is coming soon.
-                    </p>
-                </DialogFooter>
+                    <DialogFooter className="flex flex-col items-end justify-end w-full mt-4">
+                        <p className="text-xs text-red-500">
+                            <b>Warning:</b> Auth details are saved to the Project File and may appear in source control. Avoid committing sensitive info. A privacy option is coming soon.
+                        </p>
+                    </DialogFooter>
                 )}
             </DialogContent>
         </Dialog>
