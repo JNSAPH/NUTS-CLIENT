@@ -19,6 +19,10 @@ export interface Request {
             username: string;
             password: string;
         };
+        nkeys?: {
+            jwt: string;
+            seed: string;
+        };
     };
     //headers: Header[];
 }

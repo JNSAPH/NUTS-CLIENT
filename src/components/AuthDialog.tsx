@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip"
 import { AuthTypes } from "@/types/Auth";
 import { useDispatch } from "react-redux";
-import { setAuthenticationType, setNATSToken, setUsernamePassword as setUsernamePasswordAction } from "@/redux/slices/projectFile";
+import { setAuthenticationType, setNATSToken, setNKeys, setUsernamePassword as setUsernamePasswordAction } from "@/redux/slices/projectFile";
 import Logger from "@/services/logging";
 import { Request } from "@/types/ProjectFile";
 
@@ -28,6 +28,7 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
     const [defaultTab, setDefaultTab] = React.useState("debug");
     const [natsToken, setNatsToken] = React.useState("");
     const [usernamePassword, setUsernamePassword] = React.useState({ username: "", password: "" });
+    const [nkeysPair, setNKeysPair] = React.useState({ jwt: "", seed: "" });
 
     const dispatch = useDispatch();
 
@@ -48,9 +49,11 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
             username: selectedRequest.authentication?.usernamepassword?.username || "",
             password: selectedRequest.authentication?.usernamepassword?.password || ""
         });
+        setNKeysPair({
+            jwt: selectedRequest.authentication?.nkeys?.jwt || "",
+            seed: selectedRequest.authentication?.nkeys?.seed || "",
+        });
     }, [selectedRequest]);
-
-
 
     // Update NATS token if it changes
     useEffect(() => {
@@ -69,22 +72,15 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
         }
     }, [usernamePassword]);
 
-    // Set the default authentication method based on the selected tab
+    // Update nkeys if they change
     useEffect(() => {
-        switch (defaultTab) {
-            case "TOKEN":
-                setAuthMethod(AuthTypes.TOKEN);
-                break;
-            case "USERPASSWORD":
-                setAuthMethod(AuthTypes.USERPASSWORD);
-                break;
-            case "NONE":
-                setAuthMethod(AuthTypes.NONE);
-                break;
+        if (defaultTab === "NKEYS") {
+            const old = selectedRequest?.authentication?.nkeys;
+            if (!old || old.jwt !== nkeysPair.jwt || old.seed !== nkeysPair.seed) {
+                dispatch(setNKeys(nkeysPair));
+            }
         }
-    }, [defaultTab]);
-
-
+    }, [nkeysPair]);
 
     return (
         <Dialog>
@@ -107,10 +103,10 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                     </DialogTrigger>
                 </TooltipTrigger>
                 {disabled && (
-                                    <TooltipContent className="mr-4">
-                    <p>Remove the Authentication part from the NATS URL to enable the Authentication Menu</p>
-                </TooltipContent>
-                    )}
+                    <TooltipContent className="mr-4">
+                        <p>Remove the Authentication part from the NATS URL to enable the Authentication Menu</p>
+                    </TooltipContent>
+                )}
             </Tooltip>
             <DialogContent className="min-h-[400px] max-h-[80vh] flex flex-col items-start justify-start ">
                 <DialogHeader className="space-y-0">
@@ -119,14 +115,21 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                 <div className="h-full w-full overflow-auto">
                     <Tabs defaultValue={defaultTab} onValueChange={(value) => {
                         setDefaultTab(value)
-                        if (value === "TOKEN") setAuthMethod(AuthTypes.TOKEN);
-                        else if (value === "USERPASSWORD") setAuthMethod(AuthTypes.USERPASSWORD);
-                        else setAuthMethod(AuthTypes.NONE);
+                        if (value === "TOKEN") {
+                            setAuthMethod(AuthTypes.TOKEN);
+                        } else if (value === "USERPASSWORD") {
+                            setAuthMethod(AuthTypes.USERPASSWORD);
+                        } else if (value === "NKEYS") {
+                            setAuthMethod(AuthTypes.NKEYS);
+                        } else {
+                            setAuthMethod(AuthTypes.NONE);
+                        }
                     }}>
                         <TabsList>
                             <TabsTrigger value="NONE">None</TabsTrigger>
                             <TabsTrigger value="TOKEN">Token</TabsTrigger>
                             <TabsTrigger value="USERPASSWORD">Username / Password</TabsTrigger>
+                            <TabsTrigger value="NKEYS">NKeys</TabsTrigger>
                         </TabsList>
                         <TabsContent value="TOKEN">
                             <input
@@ -154,6 +157,25 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                                     className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
                                 />
                             </div>
+                        </TabsContent>
+                        <TabsContent value="NKEYS">
+                            <div className="flex flex-col gap-2">
+                                <input
+                                    type="text"
+                                    value={nkeysPair.jwt}
+                                    placeholder="JWT"
+                                    onChange={(e) => setNKeysPair({ ...nkeysPair, jwt: e.target.value })}
+                                    className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                                />
+                                <input
+                                    type="text" // change to "password" if you want to hide the seed
+                                    value={nkeysPair.seed}
+                                    placeholder="Seed"
+                                    onChange={(e) => setNKeysPair({ ...nkeysPair, seed: e.target.value })}
+                                    className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                                />
+                            </div>
+
                         </TabsContent>
                         <TabsContent value="NONE" className="flex items-center justify-center h-full mt-8">
                             <pre>ᕦ(ò_óˇ)ᕤ No authentication selected</pre>

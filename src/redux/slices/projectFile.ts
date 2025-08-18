@@ -76,6 +76,7 @@ const projectFileSlice = createSlice({
                 }
             }
         },
+        // Auth methods
         setNATSToken: (
             state,
             action: PayloadAction<string>
@@ -88,6 +89,7 @@ const projectFileSlice = createSlice({
                 }
             }
         },
+
         setUsernamePassword: (
             state,
             action: PayloadAction<{ username: string; password: string }>
@@ -99,9 +101,22 @@ const projectFileSlice = createSlice({
                     state.unsavedChanges = true;
                 }
             }
-        }
-    },
+        },
+
+        setNKeys: (
+            state,
+            action: PayloadAction<{ jwt: string; seed: string }>
+        ) => {
+            if (state.fileContent) {
+                const request = state.fileContent.requests[state.selectedRequestIndex];
+                if (request && request.authentication?.type === AuthTypes.NKEYS) {
+                    request.authentication.nkeys = action.payload;
+                    state.unsavedChanges = true;
+                }
+            }    
+        },
+    }
 });
 
-export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse, setUnsavedChanges, setAuthenticationType, setNATSToken, setUsernamePassword, setNatsServerURL } = projectFileSlice.actions;
+export const { setFilePath, setFileContent, setSelectedRequestIndex, setLastResponse, setUnsavedChanges, setAuthenticationType, setNATSToken, setUsernamePassword, setNatsServerURL, setNKeys } = projectFileSlice.actions;
 export default projectFileSlice.reducer;
