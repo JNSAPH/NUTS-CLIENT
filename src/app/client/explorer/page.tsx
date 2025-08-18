@@ -5,11 +5,10 @@ import { RootState } from "@/redux/store";
 import { useMemo, useCallback, useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticationType, setFileContent, setLastResponse, setNatsServerURL, setNATSToken, setUsernamePassword } from "@/redux/slices/projectFile";
-import { sendNatsMessage } from "@/services/natsWrapper";
+import { NatsAuth, sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
-import { IcoLock, IcoPlusBorder } from "@/components/Icons";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { IcoPlusBorder } from "@/components/Icons";
 import AuthDialog from "@/components/AuthDialog";
 import * as utils from "@/services/utils";
 import { Badge } from "@/components/ui/badge"
@@ -134,9 +133,45 @@ export default function Page() {
 
   async function handleSendRequest() {
     if (!selectedRequest) return;
+    let auth: NatsAuth = { authType: AuthTypes.NONE };
 
     try {
-      const response = await sendNatsMessage(selectedRequest?.url, selectedRequest?.topic, selectedRequest?.data);
+      switch (selectedRequest.authentication?.type) {
+        case AuthTypes.TOKEN:
+          auth = {
+            authType: AuthTypes.TOKEN,
+            token: selectedRequest.authentication.token || "NO-TOKEN-PROVIDED",
+          }
+          break;
+        
+        case AuthTypes.USERPASSWORD:
+          auth = {
+            authType: AuthTypes.USERPASSWORD,
+            username: selectedRequest.authentication.usernamepassword?.username || "NO-USERNAME-PROVIDED",
+            password: selectedRequest.authentication.usernamepassword?.password || "NO-PASSWORD-PROVIDED",
+          }
+          break;
+          
+        case AuthTypes.NKEYS:
+          auth = {
+            authType: AuthTypes.NKEYS,
+            jwt: selectedRequest.authentication.nkeys?.jwt || "NO-JWT-PROVIDED",
+            seed: selectedRequest.authentication.nkeys?.seed || "NO-SEED-PROVIDED",
+          }
+          break;
+        case AuthTypes.NONE:
+        default:
+          auth = { authType: AuthTypes.NONE };
+          break;
+      }
+
+      const response = await sendNatsMessage(
+            selectedRequest.url,
+            selectedRequest.topic,
+            selectedRequest.data,
+            auth
+        );
+
       dispatch(setLastResponse(JSON.stringify(response, null, 2)));
     } catch (error) {
       Logger.error("Failed to send request", error);
