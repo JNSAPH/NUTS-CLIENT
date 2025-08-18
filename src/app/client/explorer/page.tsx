@@ -17,6 +17,7 @@ import { AuthTypes } from "@/types/Auth";
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
   const selectedRequest = useSelector((state: RootState) => state.projectFile.fileContent?.requests[state.projectFile.selectedRequestIndex]);
+  const settings = useSelector((state: RootState) => state.windowProperties.clientSettings);
   const dispatch = useDispatch();
   const [natsUrl, setNatsUrl] = useState(content.fileContent?.requests[content.selectedRequestIndex]?.url || "");
   const [disableAuthPoupup, setDisableAuthPopup] = useState(false);
@@ -222,13 +223,17 @@ export default function Page() {
               </div>
               <div>
                 <p className="font-bold text-xl">Payload</p>
-                <textarea
+                {settings.useMonacoEditor ? (
+                  <p>Monaco isn't implemented yet..</p>
+                ) : (
+                  <textarea
                   ref={textareaRef}
                   className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
                   value={formatJson(selectedRequest?.data || "")} // Format JSON before rendering
                   onChange={(e) => handleChange(e, "data")} // Raw input on change
                   onInput={handleAutoResize} // Auto resize on input
-                />
+                  />
+                )}
               </div>
               <button className="bg-clientColors-button-background w-full p-4 rounded-md border border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover active:bg-clientColors-card-border" onClick={
                 handleSendRequest

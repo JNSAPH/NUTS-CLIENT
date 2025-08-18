@@ -55,6 +55,21 @@ export default function Page() {
               />
             </OptionWrapper>
 
+            <OptionWrapper
+              title="Use Monaco Editor"
+              description="Switch between the default Textarea and the Monaco Editor for editing NATS Payloads."
+            >
+              <Switch
+                  checked={content.clientSettings.useMonacoEditor}
+                  onCheckedChange={(state) => {
+                    dispatch(setClientSettings({
+                      ...content.clientSettings,
+                      useMonacoEditor: state
+                    }))
+                  }}
+                />
+            </OptionWrapper>
+
             <hr className="border border-clientColors-card-border" />
 
             <h2 className="text-2xl font-bold">Developer Tools</h2>
