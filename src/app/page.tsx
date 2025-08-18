@@ -5,9 +5,8 @@ import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
 import { redirect } from 'next/navigation'
 import Logger from "@/services/logging";
 import { isUpdateAvailable } from "@/services/updateCheck";
-import { useDispatch, useSelector } from "react-redux";
-import { setClientSettings, setSelectedTab, setUpdateInfo } from "@/redux/slices/windowProperties";
-import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { setSelectedTab, setUpdateInfo } from "@/redux/slices/windowProperties";
 
 const window = getCurrentWindow();
 

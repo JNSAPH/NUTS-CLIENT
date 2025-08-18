@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import RootWrapper from "@/components/RootWrapper";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen`}>
+        <TooltipProvider>
         <RootWrapper>
           {children}
         </RootWrapper>
+        </TooltipProvider>
       </body>
     </html>
   );

@@ -2,18 +2,24 @@
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { RootState } from "@/redux/store";
-import { useMemo, useCallback, useRef, useEffect } from "react";
+import { useMemo, useCallback, useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFileContent, setLastResponse } from "@/redux/slices/projectFile";
-import { sendNatsMessage } from "@/services/natsWrapper";
+import { setAuthenticationType, setFileContent, setLastResponse, setNatsServerURL, setNATSToken, setUsernamePassword } from "@/redux/slices/projectFile";
+import { NatsAuth, sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
 import { IcoPlusBorder } from "@/components/Icons";
+import AuthDialog from "@/components/AuthDialog";
+import * as utils from "@/services/utils";
+import { Badge } from "@/components/ui/badge"
+import { AuthTypes } from "@/types/Auth";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
   const selectedRequest = useSelector((state: RootState) => state.projectFile.fileContent?.requests[state.projectFile.selectedRequestIndex]);
   const dispatch = useDispatch();
+  const [natsUrl, setNatsUrl] = useState(content.fileContent?.requests[content.selectedRequestIndex]?.url || "");
+  const [disableAuthPoupup, setDisableAuthPopup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const saveId = "explorercontent";
   const ExplorerContent = useMemo(
@@ -51,7 +57,7 @@ export default function Page() {
         dispatch(
           setFileContent({
             ...content.fileContent,
-            requests: content.fileContent.requests.map((request, index) => {
+            requests: content.fileContent.requests.map((request: any, index: any) => {
               if (index === content.selectedRequestIndex) {
                 return {
                   ...selectedRequest,
@@ -80,6 +86,27 @@ export default function Page() {
     handleAutoResize();
   }, [selectedRequest?.data]);
 
+  useEffect(() => {
+    // Set the initial NATS URL from the selected request
+    if (selectedRequest) {
+      const initialUrl = selectedRequest.url || "";
+      setNatsUrl(initialUrl);
+      dispatch(setNatsServerURL(initialUrl));
+    }
+  }, [selectedRequest, dispatch]);
+
+    useEffect(() => {
+    const url = utils.parseNatsUrl(natsUrl);
+    const isDisabled = !!(url.token || (url.username && url.password));
+
+    // 
+    if (isDisabled) {
+      dispatch(setAuthenticationType(AuthTypes.NONE));
+    }
+
+    setDisableAuthPopup(isDisabled);
+  }, [natsUrl]);
+
   // If no file is opened, show the message
   if (!content.fileContent) {
     return (
@@ -96,7 +123,7 @@ export default function Page() {
         <pre className="whitespace-pre-wrap">
           Ready to get started? (ง •̀_•́)ง
         </pre>
-        <pre className="whitespace-pre-wrap"> 
+        <pre className="whitespace-pre-wrap">
           Select a request from the sidebar or create a new one by clicking <span className="inline-flex align-sub"><IcoPlusBorder size={16} />.</span>
         </pre>
 
@@ -104,13 +131,47 @@ export default function Page() {
     );
   }
 
-
-
   async function handleSendRequest() {
     if (!selectedRequest) return;
+    let auth: NatsAuth = { authType: AuthTypes.NONE };
 
     try {
-      const response = await sendNatsMessage(selectedRequest?.url, selectedRequest?.topic, selectedRequest?.data);
+      switch (selectedRequest.authentication?.type) {
+        case AuthTypes.TOKEN:
+          auth = {
+            authType: AuthTypes.TOKEN,
+            token: selectedRequest.authentication.token || "NO-TOKEN-PROVIDED",
+          }
+          break;
+        
+        case AuthTypes.USERPASSWORD:
+          auth = {
+            authType: AuthTypes.USERPASSWORD,
+            username: selectedRequest.authentication.usernamepassword?.username || "NO-USERNAME-PROVIDED",
+            password: selectedRequest.authentication.usernamepassword?.password || "NO-PASSWORD-PROVIDED",
+          }
+          break;
+          
+        case AuthTypes.NKEYS:
+          auth = {
+            authType: AuthTypes.NKEYS,
+            jwt: selectedRequest.authentication.nkeys?.jwt || "NO-JWT-PROVIDED",
+            seed: selectedRequest.authentication.nkeys?.seed || "NO-SEED-PROVIDED",
+          }
+          break;
+        case AuthTypes.NONE:
+        default:
+          auth = { authType: AuthTypes.NONE };
+          break;
+      }
+
+      const response = await sendNatsMessage(
+            selectedRequest.url,
+            selectedRequest.topic,
+            selectedRequest.data,
+            auth
+        );
+
       dispatch(setLastResponse(JSON.stringify(response, null, 2)));
     } catch (error) {
       Logger.error("Failed to send request", error);
@@ -121,13 +182,29 @@ export default function Page() {
   return (
     <ResizablePanelGroup direction="vertical" storage={ExplorerContent} autoSaveId={saveId + "_parent"}>
       <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={15} className="flex flex-col justify-center mx-4">
-        <p className="font-bold text-sm">NATS Server</p>
-        <input
-          type="text"
-          value={selectedRequest?.url}
-          onChange={(e) => handleChange(e, "url")}
-          className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg"
-        />
+        <div className="flex space-x-3 py-1">
+          <p className="font-bold text-sm">NATS Server</p>
+          {selectedRequest.authentication?.type !== "NONE" && (
+            <Badge variant="outline">Auth: {selectedRequest.authentication?.type}</Badge>
+          )}
+        </div>
+        <div className="flex items-center space-x-2 w-full">
+          <input
+            type="text"
+            value={natsUrl}
+            onChange={(e) => {
+              setNatsUrl(e.target.value);
+              handleChange(e, "url");
+              dispatch(setNatsServerURL(e.target.value));
+            }}
+            className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+          />
+          <AuthDialog
+            selectedRequest={selectedRequest}
+            disabled={disableAuthPoupup}
+          />
+
+        </div>
       </ResizablePanel>
       <ResizableHandle className="border border-clientColors-windowBorder" />
       <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={85}>

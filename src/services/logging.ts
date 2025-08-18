@@ -17,30 +17,32 @@ const Logger = {
     ),
 } as const;
 
-function logMessage<T extends unknown[]>(level: string, css: string, ...messages: T) {
+function logMessage(level: string, css: string, ...messages: unknown[]) {
   try {
-    if (level.includes("DEBUG") && window.location.port !== "1420") return;
+    if (
+      level.startsWith("DEBUG") &&
+      (typeof window === "undefined" || window.location.port !== "1420")
+    ) return;
 
     const { stack } = new Error();
     const stackLines = stack?.split("\n") || [];
-    let callerLine = stackLines[3]; // Adjust the index if necessary
+    let callerLine = stackLines[3] || "unknown caller";
+    callerLine = callerLine.replace(/^\s*at\s*/, "");
 
-    // Cleaning up the string to extract file name, line, etc.
-    callerLine = callerLine.replace(/^\s*at\s*/, ""); // Removes the 'at ' from the start
-
-    if (level === "FATAL" || level === "ERROR" || level === "WARNING") {
+    if (["FATAL", "ERROR", "WARNING"].includes(level)) {
       console.error(`%c[${level}] ${callerLine}:\n`, css, ...messages);
 
-      // Capture message in Sentry with the correct level
-      //Sentry.captureMessage(messages.join(" "), level === "FATAL" ? "fatal" : level === "ERROR" ? "error" : "warning",)
+      // Sentry.captureMessage(messages.map(m => (typeof m === "string" ? m : JSON.stringify(m))).join(" "), {
+      //   level: level.toLowerCase() as "fatal" | "error" | "warning",
+      // });
     } else {
       console.log(`%c[${level}] ${callerLine}:\n`, css, ...messages);
     }
   } catch (error) {
-    const errorMsg = `An error occurred while trying to use Logger: ${JSON.stringify(error)}`;
-    console.error("Logger Error: ", errorMsg);
+    console.error("Logger Error:", error);
     console.log("Logged Message: ", ...messages);
   }
 }
+
 
 export default Logger;
