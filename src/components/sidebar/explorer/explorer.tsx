@@ -8,6 +8,7 @@ import { createProjectFile, openProjectFile } from '@/services/fileManager';
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from '@/components/ui/context-menu';
+import { AuthTypes } from '@/types/Auth';
 
 interface SidebarItemProps {
     name: string;
@@ -211,7 +212,7 @@ export default function ExplorerSideBar() {
                         data: "",
                         topic: "",
                         authentication: {
-                            type: 'NONE'
+                            type: AuthTypes.NONE,
                         }
                     },
                 ],
