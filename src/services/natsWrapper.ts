@@ -19,6 +19,7 @@ export async function sendNatsMessage(
         server,
         topic,
         message,
+        auth,
     });
 
     Logger.info("sendNatsMessage", "Received response from NATS server", response);

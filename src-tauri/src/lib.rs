@@ -1,7 +1,20 @@
 use async_nats;
-use bytes::Bytes;
-use futures::StreamExt;
-use std::error::Error; // Import the Error trait
+use serde::Deserialize;
+use async_nats::ConnectOptions;
+// Removed the unused `nkeys::KeyPair` import
+
+#[derive(Debug, Deserialize)]
+#[serde(tag = "authType")]
+pub enum NatsAuth {
+    #[serde(rename = "NONE")]
+    None,
+    #[serde(rename = "TOKEN")]
+    Token { token: String },
+    #[serde(rename = "USERPASSWORD")]
+    UserPassword { username: String, password: String },
+    #[serde(rename = "NKEYS")]
+    NKeys { jwt: String, seed: String },
+}
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -10,28 +23,56 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-async fn send_nats_request(server: &str, topic: &str, message: &str) -> Result<String, String> {
-    // Convert string references to owned Strings
-    let server = server.to_string();
-    let topic = topic.to_string();
-    let message = message.to_string();
+async fn send_nats_request(
+    server: &str,
+    topic: &str,
+    message: &str,
+    auth: NatsAuth, // This is the new parameter
+) -> Result<String, String> {
+    // 1. Convert string references to owned Strings
+    let server_url = server.to_string();
+    let topic_name = topic.to_string();
+    let message_payload = message.to_string();
 
-    match async_nats::connect(&server).await {
-        Ok(client) => {
-            let request = async_nats::Request::new()
-                .payload(message.into())
-                .timeout(Some(std::time::Duration::from_secs(10)));
-
-            match client.send_request(topic, request).await {
-                Ok(response) => match String::from_utf8(response.payload.to_vec()) {
-                    Ok(response_str) => Ok(response_str),
-                    Err(e) => Err(format!("Error converting response to string: {}", e)),
-                },
-                Err(e) => Err(format!("Error sending request: {}", e)),
-            }
+    // 2. Configure NATS connection options based on the `auth` enum
+    let options = match auth {
+        NatsAuth::None => {
+            // No authentication options
+            ConnectOptions::new()
         }
-        Err(e) => Err(format!("Error connecting to NATS: {}", e)),
-    }
+        NatsAuth::Token { token } => {
+            // Authenticate with a token
+            ConnectOptions::with_token(token)
+        }
+        NatsAuth::UserPassword { username, password } => {
+            // Authenticate with username and password
+            ConnectOptions::with_user_and_password(username, password)
+        }
+        NatsAuth::NKeys { jwt, seed } => {
+            // Authenticate with NKeys (seed)
+            ConnectOptions::with_nkey(seed)
+        }
+    };
+
+    // 3. Connect to NATS using the configured options
+    let client = options
+        .connect(&server_url)
+        .await
+        .map_err(|e| format!("Error connecting to NATS: {}", e))?;
+
+    // 4. Send the request and handle the response
+    let request = async_nats::Request::new()
+        .payload(message_payload.into())
+        .timeout(Some(std::time::Duration::from_secs(10)));
+
+    let response = client
+        .send_request(topic_name, request) // Passing the owned String
+        .await
+        .map_err(|e| format!("Error sending request: {}", e))?;
+
+    // 5. Convert the response payload to a string
+    String::from_utf8(response.payload.to_vec())
+        .map_err(|e| format!("Error converting response to string: {}", e))
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
