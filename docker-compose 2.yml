@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  nats-token:
+    image: nats:latest
+    container_name: nats-token
+    ports:
+      - "4222:4222" # client connections
+      - "8222:8222" # monitoring
+    command: >
+      -js
+      -m 8222
+      --auth "mysecrettoken"
+    restart: unless-stopped
+
+  nats-userpass:
+    image: nats:latest
+    container_name: nats-userpass
+    ports:
+      - "4223:4222" # map container 4222 to host 4223
+      - "8223:8222" # monitoring
+    command: >
+      -js
+      -m 8222
+      --user myuser
+      --pass mypassword
+    restart: unless-stopped

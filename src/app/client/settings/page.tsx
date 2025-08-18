@@ -1,9 +1,11 @@
 "use client";
 
 import OptionWrapper from "@/components/settings/optionWrapper";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { setClientSettings } from "@/redux/slices/windowProperties";
 import { clearPersistedData, RootState } from "@/redux/store";
+import { monacoEditorLanguages, monacoEditorLanguageType } from "@/types/Settings";
 import { useDispatch, useSelector } from "react-redux";
 
 const packageJSON = require("../../../../package.json");
@@ -68,6 +70,29 @@ export default function Page() {
                     }))
                   }}
                 />
+            </OptionWrapper>
+            <OptionWrapper
+              title="Monaco Editor Language"
+              description="Select the default language for the Monaco Editor. This will change the syntax highlighting and formatting."
+            >
+              <Select onValueChange={(value) => {
+                  dispatch(setClientSettings({
+                    ...content.clientSettings,
+                    monacoEditorLanguage: value as monacoEditorLanguageType
+                  }));
+                }}
+                defaultValue={content.clientSettings.monacoEditorLanguage}>
+                  <SelectTrigger className="w-28 h-6">
+                    <SelectValue placeholder="Language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {monacoEditorLanguages.map((lang) => (
+                      <SelectItem key={lang} value={lang}>
+                        {lang.toUpperCase()}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
             </OptionWrapper>
 
             <hr className="border border-clientColors-card-border" />

@@ -5,6 +5,7 @@ import { RootState } from "@/redux/store";
 import { useMemo, useCallback, useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticationType, setFileContent, setLastResponse, setNatsServerURL, setNATSToken, setUsernamePassword } from "@/redux/slices/projectFile";
+import { setClientSettings } from "@/redux/slices/windowProperties";
 import { NatsAuth, sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
 import { setTitle } from "@/redux/slices/windowProperties";
@@ -13,6 +14,15 @@ import AuthDialog from "@/components/AuthDialog";
 import * as utils from "@/services/utils";
 import { Badge } from "@/components/ui/badge"
 import { AuthTypes } from "@/types/Auth";
+import Editor, { useMonaco } from "@monaco-editor/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { monacoEditorLanguages, monacoEditorLanguageType } from "@/types/Settings";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
@@ -96,7 +106,7 @@ export default function Page() {
     }
   }, [selectedRequest, dispatch]);
 
-    useEffect(() => {
+  useEffect(() => {
     const url = utils.parseNatsUrl(natsUrl);
     const isDisabled = !!(url.token || (url.username && url.password));
 
@@ -144,7 +154,7 @@ export default function Page() {
             token: selectedRequest.authentication.token || "NO-TOKEN-PROVIDED",
           }
           break;
-        
+
         case AuthTypes.USERPASSWORD:
           auth = {
             authType: AuthTypes.USERPASSWORD,
@@ -152,7 +162,7 @@ export default function Page() {
             password: selectedRequest.authentication.usernamepassword?.password || "NO-PASSWORD-PROVIDED",
           }
           break;
-          
+
         case AuthTypes.NKEYS:
           auth = {
             authType: AuthTypes.NKEYS,
@@ -167,11 +177,11 @@ export default function Page() {
       }
 
       const response = await sendNatsMessage(
-            selectedRequest.url,
-            selectedRequest.topic,
-            selectedRequest.data,
-            auth
-        );
+        selectedRequest.url,
+        selectedRequest.topic,
+        selectedRequest.data,
+        auth
+      );
 
       dispatch(setLastResponse(JSON.stringify(response, null, 2)));
     } catch (error) {
@@ -222,16 +232,34 @@ export default function Page() {
                 />
               </div>
               <div>
-                <p className="font-bold text-xl">Payload</p>
+                  <p className="font-bold text-xl">Payload</p>
                 {settings.useMonacoEditor ? (
-                  <p>Monaco isn't implemented yet..</p>
+                  <Editor
+                  className="p-3"
+                  height="350px"
+                  defaultLanguage={settings.monacoEditorLanguage || "plain"}
+                  defaultValue={selectedRequest?.data || ""}
+                  onChange={(value) => {
+                    const syntheticEvent = {
+                      target: { value: value ?? "" }
+                    } as React.ChangeEvent<HTMLInputElement>;
+                    handleChange(syntheticEvent, "data");
+                  }}
+                  theme="vs-dark"
+                  options={{
+                    minimap: { enabled: false },
+                    lineNumbers: "on",
+                    lineNumbersMinChars: 2,
+                    fontSize: 14,
+                    automaticLayout: true,
+                  }}/>
                 ) : (
                   <textarea
-                  ref={textareaRef}
-                  className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
-                  value={formatJson(selectedRequest?.data || "")} // Format JSON before rendering
-                  onChange={(e) => handleChange(e, "data")} // Raw input on change
-                  onInput={handleAutoResize} // Auto resize on input
+                    ref={textareaRef}
+                    className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                    value={formatJson(selectedRequest?.data || "")} // Format JSON before rendering
+                    onChange={(e) => handleChange(e, "data")} // Raw input on change
+                    onInput={handleAutoResize} // Auto resize on input
                   />
                 )}
               </div>

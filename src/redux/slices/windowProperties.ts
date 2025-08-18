@@ -23,6 +23,7 @@ const initialState: WindowPropertiesState = {
     defaultNATSURL: 'nats://127.0.0.1:4222',
     showReduxDevTools: false,
     useMonacoEditor: false, 
+    monacoEditorLanguage: 'json'
   }
 };
 
