@@ -185,7 +185,7 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                 {selectedRequest?.authentication?.type !== AuthTypes.NONE && (
                     <DialogFooter className="flex flex-col items-end justify-end w-full mt-4">
                         <p className="text-xs text-red-500">
-                            <b>Warning:</b> Auth details are saved to the Project File and may appear in source control. Avoid committing sensitive info. A privacy option is coming soon.
+                            <b>Warning:</b> Auth details are saved to the Project File and may appear in source control. Avoid committing sensitive info.
                         </p>
                     </DialogFooter>
                 )}

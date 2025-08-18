@@ -12,14 +12,15 @@ import { IcoLock, IcoPlusBorder } from "@/components/Icons";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import AuthDialog from "@/components/AuthDialog";
 import * as utils from "@/services/utils";
+import { Badge } from "@/components/ui/badge"
 import { AuthTypes } from "@/types/Auth";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
   const selectedRequest = useSelector((state: RootState) => state.projectFile.fileContent?.requests[state.projectFile.selectedRequestIndex]);
   const dispatch = useDispatch();
-  const [isEditingNatsUrl, setIsEditingNatsUrl] = useState(false);
   const [natsUrl, setNatsUrl] = useState(content.fileContent?.requests[content.selectedRequestIndex]?.url || "");
+  const [disableAuthPoupup, setDisableAuthPopup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const saveId = "explorercontent";
   const ExplorerContent = useMemo(
@@ -94,7 +95,19 @@ export default function Page() {
       dispatch(setNatsServerURL(initialUrl));
     }
   }, [selectedRequest, dispatch]);
-  
+
+    useEffect(() => {
+    const url = utils.parseNatsUrl(natsUrl);
+    const isDisabled = !!(url.token || (url.username && url.password));
+
+    // 
+    if (isDisabled) {
+      dispatch(setAuthenticationType(AuthTypes.NONE));
+    }
+
+    setDisableAuthPopup(isDisabled);
+  }, [natsUrl]);
+
   // If no file is opened, show the message
   if (!content.fileContent) {
     return (
@@ -134,27 +147,27 @@ export default function Page() {
   return (
     <ResizablePanelGroup direction="vertical" storage={ExplorerContent} autoSaveId={saveId + "_parent"}>
       <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={15} className="flex flex-col justify-center mx-4">
-        <p className="font-bold text-sm">NATS Server</p>
+        <div className="flex space-x-3 py-1">
+          <p className="font-bold text-sm">NATS Server</p>
+          {selectedRequest.authentication?.type !== "NONE" && (
+            <Badge variant="outline">Auth: {selectedRequest.authentication?.type}</Badge>
+          )}
+        </div>
         <div className="flex items-center space-x-2 w-full">
           <input
-      type="text"
-      value={natsUrl}
-      onChange={(e) => {
-        setNatsUrl(e.target.value);
-        handleChange(e, "url");
-        dispatch(setNatsServerURL(e.target.value));
-      }}
-      className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
-      />
-<AuthDialog 
-  selectedRequest={selectedRequest} 
-  disabled={
-    (() => {
-      const url = utils.parseNatsUrl(natsUrl);
-      return !!(url.token || (url.username && url.password));
-    })()
-  }
-/>
+            type="text"
+            value={natsUrl}
+            onChange={(e) => {
+              setNatsUrl(e.target.value);
+              handleChange(e, "url");
+              dispatch(setNatsServerURL(e.target.value));
+            }}
+            className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+          />
+          <AuthDialog
+            selectedRequest={selectedRequest}
+            disabled={disableAuthPoupup}
+          />
 
         </div>
       </ResizablePanel>
