@@ -84,7 +84,7 @@ export default function SideBar() {
                     />
                 ))}
             </div>
-            <UpdateAvailableItem />
+                <UpdateAvailableItem />
         </div>
     );
 }

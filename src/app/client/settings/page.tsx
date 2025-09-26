@@ -15,8 +15,8 @@ export default function Page() {
   const dispatch = useDispatch();
 
   return (
-    <div className="h-screen w-full flex flex-col">
-      <div className="flex-1 overflow-y-auto">
+    <div className="h-full w-full flex flex-col">
+      <div className="flex-1">
         <div className="p-4 space-y-4">
           <h1 className="text-3xl font-bold">Settings</h1>
 
@@ -88,6 +88,7 @@ export default function Page() {
                   }}
                 />
             </OptionWrapper>
+            
             <OptionWrapper
               title="Monaco Editor Language"
               description="Select the default language for the Monaco Editor. This will change the syntax highlighting and formatting."
