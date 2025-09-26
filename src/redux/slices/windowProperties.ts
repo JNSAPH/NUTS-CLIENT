@@ -21,6 +21,7 @@ const initialState: WindowPropertiesState = {
   clientSettings: {
     hideUpdateNotifications: false,
     defaultNATSURL: 'nats://127.0.0.1:4222',
+    defaultTimeout: 5,
     showReduxDevTools: false,
     useMonacoEditor: false, 
     monacoEditorLanguage: 'json'

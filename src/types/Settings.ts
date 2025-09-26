@@ -4,6 +4,7 @@ export interface ClientSettings {
     showReduxDevTools: boolean;
     useMonacoEditor: boolean;
     monacoEditorLanguage?: monacoEditorLanguageType;
+    defaultTimeout: number;
 }
 
 export type monacoEditorLanguageType = "json" | "yaml" | "text";

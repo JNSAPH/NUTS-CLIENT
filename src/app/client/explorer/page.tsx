@@ -172,7 +172,8 @@ export default function Page() {
         selectedRequest.url,
         selectedRequest.topic,
         selectedRequest.data,
-        auth
+        auth,
+        settings.defaultTimeout
       );
 
       dispatch(setLastResponse(JSON.stringify(response, null, 2)));

@@ -12,7 +12,8 @@ export async function sendNatsMessage(
     server: string,
     topic: string,
     message: string,
-    auth: NatsAuth
+    auth: NatsAuth,
+    timeout: number
 ) {
     Logger.info("sendNatsMessage", "Sending message to NATS server", { server, topic, message, auth });
     const response = await invoke("send_nats_request", {
@@ -20,6 +21,7 @@ export async function sendNatsMessage(
         topic,
         message,
         auth,
+        timeout
     });
 
     Logger.info("sendNatsMessage", "Received response from NATS server", response);

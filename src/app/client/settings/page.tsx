@@ -58,6 +58,23 @@ export default function Page() {
             </OptionWrapper>
 
             <OptionWrapper
+              title="NATS Request Timeout"
+              description="Set the tiemout duration (in seconds) for NATS requests. Default is 5 seconds."
+            >
+              <input
+                type="number"
+                value={content.clientSettings.defaultTimeout}
+                onChange={(e) => {
+                  dispatch(setClientSettings({
+                    ...content.clientSettings,
+                    defaultTimeout: Number(e.target.value)
+                  }))
+                }}
+                className="mt-2 bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+              />
+            </OptionWrapper>
+
+            <OptionWrapper
               title="Use Monaco Editor"
               description="Switch between the default Textarea and the Monaco Editor for editing NATS Payloads."
             >
@@ -132,8 +149,8 @@ export default function Page() {
             </OptionWrapper>
 
             <OptionWrapper
-              title="Thank you for using NATS"
-              description="NATS is a free and open-source project. If you enjoy using NATS, please consider supporting the project by donating."
+              title="Thank you for using NUTS"
+              description="NUTS is a free and open-source project. If you enjoy using NATS, please consider supporting the project by donating."
             >
               <div className="mt-2 space-y-2">
                 <p>Nuts Version {packageJSON.version}</p>

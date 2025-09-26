@@ -29,6 +29,7 @@ async fn send_nats_request(
     topic: &str,
     message: &str,
     auth: NatsAuth,
+    timeout: u64,
 ) -> Result<String, String> {
     let server_url = server.to_string();
     let topic_name = topic.to_string();
@@ -67,7 +68,7 @@ async fn send_nats_request(
 
     let request = async_nats::Request::new()
         .payload(message_payload.into())
-        .timeout(Some(std::time::Duration::from_secs(10)));
+        .timeout(Some(std::time::Duration::from_secs(timeout)));
 
     let response = client
         .send_request(topic_name, request)
