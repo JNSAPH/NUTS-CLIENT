@@ -15,14 +15,6 @@ import * as utils from "@/services/utils";
 import { Badge } from "@/components/ui/badge"
 import { AuthTypes } from "@/types/Auth";
 import Editor, { useMonaco } from "@monaco-editor/react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { monacoEditorLanguages, monacoEditorLanguageType } from "@/types/Settings";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
@@ -238,7 +230,7 @@ export default function Page() {
                   className="p-3"
                   height="350px"
                   defaultLanguage={settings.monacoEditorLanguage || "plain"}
-                  defaultValue={selectedRequest?.data || ""}
+                  value={selectedRequest?.data || ""}
                   onChange={(value) => {
                     const syntheticEvent = {
                       target: { value: value ?? "" }

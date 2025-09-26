@@ -49,7 +49,7 @@ export const IcoRefresh = ({ size = 24, color = "currentColor", className }: Ico
 
 export const IcoLock = ({ size = 24, color = "currentColor", className }: IconProps) => (
 <svg width={size} height={size} className={className} viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8 12V15M4 8V5C4 2.79086 5.79086 1 8 1C9.86384 1 11.4299 2.27477 11.874 4M3 19H13C14.1046 19 15 18.1046 15 17V10C15 8.89543 14.1046 8 13 8H3C1.89543 8 1 8.89543 1 10V17C1 18.1046 1.89543 19 3 19Z" stroke={color} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8 12V15M4 8V5C4 2.79086 5.79086 1 8 1C9.86384 1 11.4299 2.27477 11.874 4M3 19H13C14.1046 19 15 18.1046 15 17V10C15 8.89543 14.1046 8 13 8H3C1.89543 8 1 8.89543 1 10V17C1 18.1046 1.89543 19 3 19Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 
 );
