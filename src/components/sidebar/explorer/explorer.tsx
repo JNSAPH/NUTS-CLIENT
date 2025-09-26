@@ -67,12 +67,10 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
     isDragging,
   } = useSortable({ id, disabled: isEditing });
 
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.85 : 1,
-  };
-
+const style: React.CSSProperties = {
+  transform: CSS.Transform.toString(transform),
+  transition: isDragging ? 'none' : 'none', // disable the tr
+};
   async function removeRequest() {
     if (!content.fileContent) return;
     const answer = await ask('This action cannot be reverted. Are you sure?', {
