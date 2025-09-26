@@ -67,7 +67,7 @@ export default function Page() {
                 onChange={(e) => {
                   dispatch(setClientSettings({
                     ...content.clientSettings,
-                    defaultTimeout: Number(e.target.value)
+                    defaultTimeout: Number(e.target.value) || 5
                   }))
                 }}
                 className="mt-2 bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
