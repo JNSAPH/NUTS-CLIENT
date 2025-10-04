@@ -78,14 +78,13 @@ export default function WelcomePage() {
         {/* Buttons */}
         <div className="flex flex-col items-center space-y-3">
           <Button
-            className="px-8 py-2 text-base rounded-md"
+            className="text-base rounded-md"
             onClick={handleNewProject}
           >
             New Project
           </Button>
           <Button
-            className="px-12 py-2 text-base rounded-md"
-            variant="default"
+            className="text-base rounded-md"
             onClick={handleOpenProject}
           >
             Open existing Project
