@@ -20,11 +20,12 @@ export const IcoFile = ({ size = 24, color = "currentColor", className }: IconPr
 );
 
 export const IcoFolder = ({ size = 24, color = "currentColor", className }: IconProps) => (
-    <svg className={className} width={size} height={size} viewBox="0 0 16 13" fill={color} xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 2.29412C0 1.02711 1.07452 0 2.4 0H5.73726C6.37378 0 6.98423 0.241701 7.43431 0.671932L8.09706 1.30544C8.24709 1.44885 8.45057 1.52941 8.66274 1.52941H13.6C14.9255 1.52941 16 2.55652 16 3.82353V4.99745C15.5293 4.73719 14.9829 4.58824 14.4 4.58824H1.6C1.01714 4.58824 0.470677 4.73719 0 4.99745V2.29412Z" fill={color} />
-        <path d="M0 7.64706V10.7059C0 11.9729 1.07452 13 2.4 13H13.6C14.9255 13 16 11.9729 16 10.7059V7.64706C16 6.80239 15.2837 6.11765 14.4 6.11765H1.6C0.716344 6.11765 0 6.80239 0 7.64706Z" fill={color} />
-    </svg>
+    <svg className={className} width={size} height={size}  viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 1.925C0 0.861852 0.861852 0 1.925 0H4.99241C5.49382 0 5.97545 0.195641 6.33482 0.545303L6.95851 1.15214C7.12186 1.31107 7.34078 1.4 7.5687 1.4H12.075C13.1381 1.4 14 2.26185 14 3.325V4.4099C13.7375 4.2757 13.4401 4.2 13.125 4.2H0.875C0.559922 4.2 0.262524 4.2757 0 4.4099V1.925Z" fill={color}/>
+    <path d="M0 6.125V9.975C0 11.0381 0.861852 11.9 1.925 11.9H12.075C13.1381 11.9 14 11.0381 14 9.975V6.125C14 5.64175 13.6082 5.25 13.125 5.25H0.875C0.391751 5.25 0 5.64175 0 6.125Z" fill={color}/>
+</svg>
 );
+
 
 export const IcoBin = ({ size = 24, color = "currentColor", className }: IconProps) => (
     <svg className={className} width={size} height={size} viewBox="0 0 18 20" fill={"none"} xmlns="http://www.w3.org/2000/svg">

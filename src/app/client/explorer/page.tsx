@@ -1,10 +1,21 @@
 "use client";
 
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { RootState } from "@/redux/store";
 import { useMemo, useCallback, useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthenticationType, setFileContent, setLastResponse, setNatsServerURL, setNATSToken, setUsernamePassword } from "@/redux/slices/projectFile";
+import {
+  setAuthenticationType,
+  setFileContent,
+  setLastResponse,
+  setNatsServerURL,
+  setNATSToken,
+  setUsernamePassword,
+} from "@/redux/slices/projectFile";
 import { setClientSettings } from "@/redux/slices/windowProperties";
 import { NatsAuth, sendNatsMessage } from "@/services/natsWrapper";
 import Logger from "@/services/logging";
@@ -12,16 +23,31 @@ import { setTitle } from "@/redux/slices/windowProperties";
 import { IcoPlusBorder } from "@/components/Icons";
 import AuthDialog from "@/components/AuthDialog";
 import * as utils from "@/services/utils";
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import { AuthTypes } from "@/types/Auth";
 import Editor, { useMonaco } from "@monaco-editor/react";
+import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  handleNewProject,
+  handleOpenProject,
+} from "@/components/titlebar/utils";
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.projectFile);
-  const selectedRequest = useSelector((state: RootState) => state.projectFile.fileContent?.requests[state.projectFile.selectedRequestIndex]);
-  const settings = useSelector((state: RootState) => state.windowProperties.clientSettings);
+  const selectedRequest = useSelector(
+    (state: RootState) =>
+      state.projectFile.fileContent?.requests[
+        state.projectFile.selectedRequestIndex
+      ]
+  );
+  const settings = useSelector(
+    (state: RootState) => state.windowProperties.clientSettings
+  );
   const dispatch = useDispatch();
-  const [natsUrl, setNatsUrl] = useState(content.fileContent?.requests[content.selectedRequestIndex]?.url || "");
+  const [natsUrl, setNatsUrl] = useState(
+    content.fileContent?.requests[content.selectedRequestIndex]?.url || ""
+  );
   const [disableAuthPoupup, setDisableAuthPopup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const saveId = "explorercontent";
@@ -38,9 +64,8 @@ export default function Page() {
   );
 
   useEffect(() => {
-    dispatch(setTitle("NUTS - " + content.fileContent?.name));
+    dispatch(setTitle("Orbit - " + content.fileContent?.name));
   }, [content.selectedRequestIndex]);
-
 
   // Function to format JSON
   const formatJson = (jsonString: string) => {
@@ -54,28 +79,38 @@ export default function Page() {
 
   // Memoized onChange handler
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: string) => {
+    (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      key: string
+    ) => {
       if (selectedRequest && content.fileContent) {
         const lastResponse = selectedRequest.lastResponse;
         dispatch(
           setFileContent({
             ...content.fileContent,
-            requests: content.fileContent.requests.map((request: any, index: any) => {
-              if (index === content.selectedRequestIndex) {
-                return {
-                  ...selectedRequest,
-                  [key]: e.target.value || "",
-                };
+            requests: content.fileContent.requests.map(
+              (request: any, index: any) => {
+                if (index === content.selectedRequestIndex) {
+                  return {
+                    ...selectedRequest,
+                    [key]: e.target.value || "",
+                  };
+                }
+                return request;
               }
-              return request;
-            }),
+            ),
           })
         );
 
         dispatch(setLastResponse(lastResponse || "")); // More of a hack, but it works and i don't care enough to fix it - it's 2:43am
       }
     },
-    [dispatch, content.fileContent, selectedRequest, content.selectedRequestIndex]
+    [
+      dispatch,
+      content.fileContent,
+      selectedRequest,
+      content.selectedRequestIndex,
+    ]
   );
 
   const handleAutoResize = () => {
@@ -102,7 +137,7 @@ export default function Page() {
     const url = utils.parseNatsUrl(natsUrl);
     const isDisabled = !!(url.token || (url.username && url.password));
 
-    // 
+    //
     if (isDisabled) {
       dispatch(setAuthenticationType(AuthTypes.NONE));
     }
@@ -113,8 +148,29 @@ export default function Page() {
   // If no file is opened, show the message
   if (!content.fileContent) {
     return (
-      <div className="p-4">
-        <pre>Please open a file to view its contents</pre>
+      <div className="p-4 flex flex-col h-full items-center justify-center space-y-4">
+        <div className="flex items-center flex-col space-y-1">
+          <p className="text-2xl">(・_・;)</p>
+          <p>No Project Opened</p>
+        </div>
+        <div className="flex space-x-4">
+          <Button
+            className="text-base rounded-md"
+            onClick={async () => {
+              await handleNewProject(dispatch);
+            }}
+          >
+            New Project
+          </Button>
+          <Button
+            className="text-base rounded-md"
+            onClick={async () => {
+              await handleOpenProject(dispatch);
+            }}
+          >
+            Open existing Project
+          </Button>
+        </div>
       </div>
     );
   }
@@ -122,14 +178,14 @@ export default function Page() {
   // If no request is selected, show the message
   if (!selectedRequest || !content.fileContent) {
     return (
-      <div className="p-4 flex flex-col h-full">
-        <pre className="whitespace-pre-wrap">
-          Ready to get started? (ง •̀_•́)ง
-        </pre>
-        <pre className="whitespace-pre-wrap">
-          Select a request from the sidebar or create a new one by clicking <span className="inline-flex align-sub"><IcoPlusBorder size={16} />.</span>
-        </pre>
-
+      <div className="p-4 flex flex-col h-full items-center justify-center space-y-4">
+        <div className="flex items-center flex-col space-y-1">
+          <p className="text-2xl">(・_・;)</p>
+          <p>No Request Selected</p>
+          <p className="text-sm text-gray-500">
+            Select or create a request from the sidebar
+          </p>
+        </div>
       </div>
     );
   }
@@ -144,23 +200,28 @@ export default function Page() {
           auth = {
             authType: AuthTypes.TOKEN,
             token: selectedRequest.authentication.token || "NO-TOKEN-PROVIDED",
-          }
+          };
           break;
 
         case AuthTypes.USERPASSWORD:
           auth = {
             authType: AuthTypes.USERPASSWORD,
-            username: selectedRequest.authentication.usernamepassword?.username || "NO-USERNAME-PROVIDED",
-            password: selectedRequest.authentication.usernamepassword?.password || "NO-PASSWORD-PROVIDED",
-          }
+            username:
+              selectedRequest.authentication.usernamepassword?.username ||
+              "NO-USERNAME-PROVIDED",
+            password:
+              selectedRequest.authentication.usernamepassword?.password ||
+              "NO-PASSWORD-PROVIDED",
+          };
           break;
 
         case AuthTypes.NKEYS:
           auth = {
             authType: AuthTypes.NKEYS,
             jwt: selectedRequest.authentication.nkeys?.jwt || "NO-JWT-PROVIDED",
-            seed: selectedRequest.authentication.nkeys?.seed || "NO-SEED-PROVIDED",
-          }
+            seed:
+              selectedRequest.authentication.nkeys?.seed || "NO-SEED-PROVIDED",
+          };
           break;
         case AuthTypes.NONE:
         default:
@@ -183,13 +244,27 @@ export default function Page() {
     }
   }
 
+  // Render the main content
   return (
-    <ResizablePanelGroup direction="vertical" storage={ExplorerContent} autoSaveId={saveId + "_parent"}>
-      <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={15} className="flex flex-col justify-center mx-4">
+    <ResizablePanelGroup
+      direction="vertical"
+      storage={ExplorerContent}
+      autoSaveId={saveId + "_parent"}
+    >
+      <ResizablePanel
+        collapsible={true}
+        collapsedSize={0}
+        minSize={10}
+        defaultSize={15}
+        className="flex flex-col justify-center mx-4"
+      >
+        {/* NATS URL Input and Auth Button */}
         <div className="flex space-x-3 py-1">
           <p className="font-bold text-sm">NATS Server</p>
           {selectedRequest.authentication?.type !== "NONE" && (
-            <Badge variant="outline">Auth: {selectedRequest.authentication?.type}</Badge>
+            <Badge variant="outline">
+              Auth: {selectedRequest.authentication?.type}
+            </Badge>
           )}
         </div>
         <div className="flex items-center space-x-2 w-full">
@@ -207,13 +282,28 @@ export default function Page() {
             selectedRequest={selectedRequest}
             disabled={disableAuthPoupup}
           />
-
         </div>
       </ResizablePanel>
-      <ResizableHandle className="border border-clientColors-windowBorder" />
-      <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={85}>
-        <ResizablePanelGroup direction="horizontal" storage={ExplorerContent} autoSaveId={saveId + "_child"}>
-          <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={25} className="">
+      <ResizableHandle className="border-1 border-orbit-sideBar" />
+      <ResizablePanel
+        collapsible={true}
+        collapsedSize={0}
+        minSize={10}
+        defaultSize={85}
+      >
+        {/* Topic, Payload, and Response Sections */}
+        <ResizablePanelGroup
+          direction="horizontal"
+          storage={ExplorerContent}
+          autoSaveId={saveId + "_child"}
+        >
+          <ResizablePanel
+            collapsible={true}
+            collapsedSize={0}
+            minSize={10}
+            defaultSize={25}
+            className=""
+          >
             <div className="p-4 h-full w-full space-y-8 overflow-auto">
               <div>
                 <p className="font-bold text-xl">Topic</p>
@@ -225,27 +315,28 @@ export default function Page() {
                 />
               </div>
               <div>
-                  <p className="font-bold text-xl">Payload</p>
+                <p className="font-bold text-xl">Payload</p>
                 {settings.useMonacoEditor ? (
                   <Editor
-                  className="p-3"
-                  height="350px"
-                  defaultLanguage={settings.monacoEditorLanguage || "plain"}
-                  value={selectedRequest?.data || ""}
-                  onChange={(value) => {
-                    const syntheticEvent = {
-                      target: { value: value ?? "" }
-                    } as React.ChangeEvent<HTMLInputElement>;
-                    handleChange(syntheticEvent, "data");
-                  }}
-                  theme="vs-dark"
-                  options={{
-                    minimap: { enabled: false },
-                    lineNumbers: "on",
-                    lineNumbersMinChars: 2,
-                    fontSize: 14,
-                    automaticLayout: true,
-                  }}/>
+                    className="p-3"
+                    height="350px"
+                    defaultLanguage={settings.monacoEditorLanguage || "plain"}
+                    value={selectedRequest?.data || ""}
+                    onChange={(value) => {
+                      const syntheticEvent = {
+                        target: { value: value ?? "" },
+                      } as React.ChangeEvent<HTMLInputElement>;
+                      handleChange(syntheticEvent, "data");
+                    }}
+                    theme="vs-dark"
+                    options={{
+                      minimap: { enabled: false },
+                      lineNumbers: "on",
+                      lineNumbersMinChars: 2,
+                      fontSize: 14,
+                      automaticLayout: true,
+                    }}
+                  />
                 ) : (
                   <textarea
                     ref={textareaRef}
@@ -256,19 +347,31 @@ export default function Page() {
                   />
                 )}
               </div>
-              <button className="bg-clientColors-button-background w-full p-4 rounded-md border border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover active:bg-clientColors-card-border" onClick={
-                handleSendRequest
-              }>Send Request</button>
+              <button
+                className="bg-clientColors-button-background w-full p-4 rounded-md border border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover active:bg-clientColors-card-border"
+                onClick={handleSendRequest}
+              >
+                Send Request
+              </button>
             </div>
           </ResizablePanel>
-          <ResizableHandle className="border border-clientColors-windowBorder" />
-          <ResizablePanel collapsible={true} collapsedSize={0} minSize={10} defaultSize={25}>
+          <ResizableHandle className="border-1 border-orbit-sideBar" />
+          <ResizablePanel
+            collapsible={true}
+            collapsedSize={0}
+            minSize={10}
+            defaultSize={25}
+          >
             <div className="p-4 space-y-2 flex flex-col h-full">
               <p className="font-bold text-xl flex-shrink-0">Response</p>
               <textarea
                 readOnly
                 className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg flex-grow resize-none "
-                value={formatJson(selectedRequest.lastResponse ? JSON.parse(selectedRequest.lastResponse) : "")}
+                value={formatJson(
+                  selectedRequest.lastResponse
+                    ? JSON.parse(selectedRequest.lastResponse)
+                    : ""
+                )}
               />
             </div>
           </ResizablePanel>

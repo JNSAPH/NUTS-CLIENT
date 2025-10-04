@@ -242,7 +242,7 @@ export default function ExplorerSideBar() {
   }
 
   return (
-    <div className="h-full w-full border-r-2 border-clientColors-windowBorder overflow-auto space-y-[2px] p-2">
+    <div className="h-full w-full bg-orbit-sideBar rounded-tr-xl border-l-2 border-orbit-background overflow-auto space-y-[2px] p-2">
           <div className="flex justify-between items-center">
             {isEditingProjectName ? (
               <input

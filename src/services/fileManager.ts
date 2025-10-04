@@ -15,6 +15,12 @@ export async function openProjectFile(): Promise<[string, ProjectFile] | Event> 
     const filePath = await openFileDialog({
         multiple: false,
         directory: false,
+        filters: [
+            {
+                name: "JSON",
+                extensions: ["json"],
+            },
+        ]
     });
 
     if (filePath === null) {

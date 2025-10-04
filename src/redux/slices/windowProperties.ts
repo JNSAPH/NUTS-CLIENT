@@ -1,3 +1,4 @@
+import Logger from '@/services/logging';
 import { ClientSettings } from '@/types/Settings';
 import { isUpdateAvailableResponse } from '@/types/UpdateStuff';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -15,7 +16,7 @@ export type AvailableTabs = 'explorer' | 'settings';
 
 const initialState: WindowPropertiesState = {
   isFullScreen: false,
-  title: 'NUTS - NATS Client',
+  title: 'Orbit',
   selectedTab: 'explorer',
   updateInfo: null,
   clientSettings: {

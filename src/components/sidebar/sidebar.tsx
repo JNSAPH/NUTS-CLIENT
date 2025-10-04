@@ -17,34 +17,42 @@ interface SideBarItemProps {
 
 const SideBarItems: SideBarItemProps[] = [
     {
-        icon: <IcoFolder />,
+        icon: <IcoFolder size={22} />,
         url: '/client/explorer',
         tab: 'explorer',
     },
     {
-        icon: <IcoSettings />,
+        icon: <IcoSettings size={24} />,
         url: '/client/settings',
         tab: 'settings',
     }
 ]
 
 function SideBarItem(props: SideBarItemProps) {
-    const reduxState = useSelector((state: RootState) => state.windowProperties);
-    const selectedTab = reduxState.selectedTab;
+  const reduxState = useSelector((state: RootState) => state.windowProperties);
+  const selectedTab = reduxState.selectedTab;
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const isActive = selectedTab === props.tab;
 
-    return (
-        <div
-            className={`flex items-center justify-center w-full h-[48px] cursor-pointer ${selectedTab == props.tab ? 'border-l-2 border-clientColors-accentColor' : ''}`}
-            onClick={() => {
-                dispatch(setSelectedTab(props.tab));
-                redirect(props.url);
-            }}>
-            {props.icon}
-        </div>
-    );
+  return (
+    <div
+      className="flex items-center justify-center p-2 cursor-pointer group"
+      onClick={() => {
+        dispatch(setSelectedTab(props.tab));
+        redirect(props.url);
+      }}
+    >
+      <div
+        className={`flex items-center justify-center w-[42px] h-[42px] rounded-lg transition-all duration-200 
+          ${isActive ? 'bg-orbit-marine text-white' : 'bg-transparent group-hover:bg-clientColors-button-hover'}`}
+      >
+        {props.icon}
+      </div>
+    </div>
+  );
 }
+
 
 function UpdateAvailableItem() {
     const reduxState = useSelector((state: RootState) => state.windowProperties);
@@ -53,8 +61,7 @@ function UpdateAvailableItem() {
     if (reduxState.updateInfo !== null && !hideUpdateNotifications) {
         return (
             <div className='relative flex items-center justify-center w-full h-[48px] bg-clientColors-button-background hover:bg-clientColors-button-hover cursor-pointer' onClick={() => {
-                window.open(reduxState.updateInfo?.html_url, '_blank'); // Move this to open in the default browser @TODO
-                // if (reduxState.updateInfo?.html_url) openPath(reduxState.updateInfo?.html_url!);
+                window.open(reduxState.updateInfo?.html_url, '_blank'); 
             }}>
                 {/* Icon */}
                 <div className="relative">
@@ -72,10 +79,14 @@ function UpdateAvailableItem() {
 
 
 export default function SideBar() {
+
+    const notRoundedPaths: AvailableTabs[] = ['settings'];
+    const selectedTab = useSelector((state: RootState) => state.windowProperties.selectedTab);
+
     return (
-        <div className='h-full flex flex-col justify-between min-w-[48px]'>
+        <div className={`h-full flex flex-col justify-between bg-orbit-sideBar ${notRoundedPaths.includes(selectedTab) ? 'rounded-t-xl' : 'rounded-tl-xl'}`}>
             <div>
-                {SideBarItems.map((item, index) => (
+                {SideBarItems.filter(item => item.tab !== 'settings').map((item, index) => (
                     <SideBarItem
                         key={index}
                         icon={item.icon}
@@ -84,7 +95,17 @@ export default function SideBar() {
                     />
                 ))}
             </div>
+            <div>
+                {SideBarItems.filter(item => item.tab === 'settings').map((item, index) => (
+                    <SideBarItem
+                        key={index}
+                        icon={item.icon}
+                        url={item.url}
+                        tab={item.tab}
+                    />
+                ))}
                 <UpdateAvailableItem />
+            </div>
         </div>
     );
 }
