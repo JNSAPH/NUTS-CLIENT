@@ -9,6 +9,9 @@ export default {
   theme: {
     extend: {
       colors: {
+        orbit: {
+          background: "#0E0E0F",
+        },
         clientColors: {
           windowBorder: "#2d2d2e",
           windowBackground: "#252526",

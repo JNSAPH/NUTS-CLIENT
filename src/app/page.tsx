@@ -43,9 +43,8 @@ export default function Home() {
       await window.center();
       await setIsLoading(false);
 
-      // Redirect to explorer
-      dispatch(setSelectedTab("explorer"));
-      redirect("/client/explorer");
+      // Redirect to welcome section
+      redirect("/welcome");
     }
 
     startClient();
