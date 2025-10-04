@@ -41,9 +41,9 @@ export default function Home() {
       await window.setResizable(true);
       await window.setSize(new LogicalSize(1000, 600));
       await window.center();
-      await setIsLoading(false);
-
+      
       // Redirect to welcome section
+      await setIsLoading(false);
       redirect("/welcome");
     }
 

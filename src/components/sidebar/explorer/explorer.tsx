@@ -4,12 +4,9 @@ import { IcoPlusBorder } from '@/components/Icons';
 import { ask } from '@tauri-apps/plugin-dialog';
 import {
   setFileContent,
-  setFilePath,
   setSelectedRequestIndex,
-  setUnsavedChanges,
 } from '@/redux/slices/projectFile';
 import { RootState } from '@/redux/store';
-import { createProjectFile, openProjectFile } from '@/services/fileManager';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -43,7 +40,7 @@ interface SidebarItemProps {
   name: string;
   index: number;
   active?: boolean;
-  id: string; // sortable id
+  id: string;
 }
 
 function SidebarItem({ name, index, active, id }: SidebarItemProps) {
@@ -63,7 +60,6 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
     setNodeRef,
     setActivatorNodeRef,
     transform,
-    transition,
     isDragging,
   } = useSortable({ id, disabled: isEditing });
 
@@ -226,28 +222,6 @@ export default function ExplorerSideBar() {
     }
   }
 
-  async function openFile() {
-    const result = await openProjectFile();
-    if (result === "ERROR") {
-      dispatch(setFileContent(null));
-      dispatch(setFilePath(null));
-    } else if (result !== "CANCELED") {
-      const [filePath, fileContent] = result;
-      dispatch(setFileContent(fileContent));
-      dispatch(setFilePath(filePath));
-      dispatch(setUnsavedChanges(false));
-    }
-  }
-
-  async function createNewFile() {
-    const result = await createProjectFile();
-    if (result !== "ERROR" && result !== "CANCELED") {
-      const [filePath, fileContent] = result;
-      dispatch(setFileContent(fileContent));
-      dispatch(setFilePath(filePath));
-    }
-  }
-
   async function addNewRequest() {
     if (content.fileContent) {
       await dispatch(setFileContent({
@@ -269,8 +243,6 @@ export default function ExplorerSideBar() {
 
   return (
     <div className="h-full w-full border-r-2 border-clientColors-windowBorder overflow-auto space-y-[2px] p-2">
-      {content.filePath ? (
-        <>
           <div className="flex justify-between items-center">
             {isEditingProjectName ? (
               <input
@@ -318,24 +290,6 @@ export default function ExplorerSideBar() {
               ))}
             </SortableContext>
           </DndContext>
-        </>
-      ) : (
-        <div>
-          <pre className="text-red-500 text-center pt-2">No file selected</pre>
-          <button
-            onClick={openFile}
-            className="bg-clientColors-button-background hover:bg-clientColors-button-hover active:bg-clientColors-button-active text-white p-2 rounded-md w-full mt-2"
-          >
-            Open a file
-          </button>
-          <button
-            onClick={createNewFile}
-            className="bg-clientColors-button-background hover:bg-clientColors-button-hover active:bg-clientColors-button-active text-white p-2 rounded-md w-full mt-2"
-          >
-            Create new File
-          </button>
-        </div>
-      )}
     </div>
   );
 }
