@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "Orbit"
-version = "1.0.0-RC2"
+version = "1.0.0-1"
 dependencies = [
  "async-nats",
  "bytes",
