@@ -45,7 +45,7 @@ function SideBarItem(props: SideBarItemProps) {
     >
       <div
         className={`flex items-center justify-center w-[42px] h-[42px] rounded-lg transition-all duration-200 
-          ${isActive ? 'bg-orbit-marine text-white' : 'bg-transparent group-hover:bg-orbit-mint/20 text-muted-foreground'}`}
+          ${isActive ? 'bg-orbit-marine text-white' : 'bg-transparent group-hover:bg-orbit-marine/5 text-muted-foreground'}`}
       >
         {props.icon}
       </div>
@@ -69,7 +69,7 @@ function UpdateAvailableItem() {
       aria-label="Open latest release notes"
     >
       <div
-        className={`flex items-center justify-center w-[42px] h-[42px] rounded-lg transition-all duration-200 bg-transparent group-hover:bg-orbit-mint/20`}
+        className={`flex items-center justify-center w-[42px] h-[42px] rounded-lg transition-all duration-200 bg-transparent group-hover:bg-orbit-mint/90`}
       >
         <div className="relative">
           <IcoRefresh />
@@ -91,7 +91,7 @@ export default function SideBar() {
     const selectedTab = useSelector((state: RootState) => state.windowProperties.selectedTab);
 
     return (
-        <div className={`h-full flex flex-col justify-between bg-orbit-carbon ${notRoundedPaths.includes(selectedTab) ? 'rounded-t-xl' : 'rounded-tl-xl'}`}>
+        <div className={`h-full flex flex-col justify-between bg-secondary ${notRoundedPaths.includes(selectedTab) ? 'rounded-t-xl' : 'rounded-tl-xl'}`}>
             <div>
                 {SideBarItems.filter(item => item.tab !== 'settings').map((item, index) => (
                     <SideBarItem

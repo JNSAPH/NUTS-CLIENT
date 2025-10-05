@@ -23,12 +23,21 @@ import {
 } from "@/types/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 const packageJSON = require("../../../../package.json");
 
 export default function Page() {
   const content = useSelector((state: RootState) => state.windowProperties);
+  const { theme, systemTheme, setTheme, resolvedTheme } = useTheme();
+  const [selectedTheme, setSelectedTheme] = useState<string>(theme || "system");
+  
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setSelectedTheme(theme || "system");
+  }, [theme]);
 
   return (
     <div className="h-full w-full flex flex-col">
@@ -132,6 +141,31 @@ export default function Page() {
           </OptionSection>
 
           <OptionSection
+            title="Accessibility"
+            description="Settings to improve accessibility and usability.">
+            <OptionWrapper
+              title="Appearance"
+              description="Set the appearance of the application. Choose between Light, Dark, or System default."
+            >
+              <Select
+                onValueChange={(value) => {
+                  console.log(value);
+                  setTheme(value);
+                }}
+                defaultValue={selectedTheme}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Appearance" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="system">System</SelectItem>
+                </SelectContent>
+              </Select>
+              </OptionWrapper>
+          </OptionSection>
+
+          <OptionSection
             title="Developer Tools"
             description="Settings for developers and advanced users."
           >
@@ -173,22 +207,26 @@ export default function Page() {
             title="Thank you for using Orbit!"
             description={`Built with ❤️ by aph — Orbit is part of oOVOLabs.`}
           >
-            <Button className="mt-2" onClick={() => {
-                      const w = new WebviewWindow("my-new-window", {
-          url: "/changelog",
-          width: 800,
-          height: 600,
-          title: "Orbit - Changelog",
-        });
+            <Button
+              variant={"secondary"}
+              className="mt-2"
+              onClick={() => {
+                const w = new WebviewWindow("my-new-window", {
+                  url: "/changelog",
+                  width: 800,
+                  height: 600,
+                  title: "Orbit - Changelog",
+                });
 
-        // you can listen to creation or errors
-        w.once("tauri://created", () => {
-          Logger.info("changelog window created");
-        });
-        w.once("tauri://error", (e) => {
-          Logger.error("error creating window:", e);
-        });
-            }}>
+                // you can listen to creation or errors
+                w.once("tauri://created", () => {
+                  Logger.info("changelog window created");
+                });
+                w.once("tauri://error", (e) => {
+                  Logger.error("error creating window:", e);
+                });
+              }}
+            >
               Version {packageJSON.version}
             </Button>
           </OptionWrapper>

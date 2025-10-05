@@ -1,5 +1,6 @@
 import { isUpdateAvailableResponse, UpdateCheckResponse } from "@/types/UpdateStuff";
 import { getVersion } from "@tauri-apps/api/app";
+import Logger from "./logging";
 
 const packageJSON = require("../../package.json");
 
@@ -10,6 +11,11 @@ export async function isUpdateAvailable(): Promise<false | isUpdateAvailableResp
     
     const response = await fetch(`https://api.github.com/repos/${author}/${name}/releases/latest`);
     const data: UpdateCheckResponse = await response.json();
+
+    if (response.status !== 200) {
+        Logger.error("Failed to fetch update info:", data);
+        return false;
+    }
 
     if (data.tag_name !== version) {
         return {

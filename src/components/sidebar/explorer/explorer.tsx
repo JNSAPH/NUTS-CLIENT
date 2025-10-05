@@ -137,11 +137,12 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
         <div
           ref={setNodeRef}
           style={style}
-          className={`flex items-center p-1 rounded-md hover:bg-orbit-night/80 transition-all justify-between cursor-pointer ${
-            active ? "bg-orbit-night" : ""
+          className={`flex items-center p-1 rounded-md hover:bg-background/80 transition-all justify-between cursor-pointer ${
+            active ? "bg-background" : ""
           }`}
           onClick={() => dispatch(setSelectedRequestIndex(index))}
         >
+          {/* Editing and drag handle container */}
           <div className="flex items-center gap-2 w-full">
             {/* Drag handle */}
             {!isEditing && (
@@ -186,7 +187,7 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem
-          className="text-red-500 space-x-2 focus:bg-[#1e0a0a]"
+          className="text-red-500 space-x-2 hover:bg-red-500/10"
           onClick={removeRequest}
         >
           <p>Delete Request</p>
@@ -290,7 +291,7 @@ export default function ExplorerSideBar() {
   }
 
   return (
-    <div className="h-full w-full bg-orbit-carbon rounded-tr-xl border-l-2 border-orbit-night overflow-auto space-y-[2px] p-2">
+    <div className="h-full w-full bg-secondary rounded-tr-xl border-l-2 border-background overflow-auto space-y-[2px] p-2">
       <div className="flex justify-between items-center border-b-2 border-secondary pb-2 mb-2">
         {isEditingProjectName ? (
           <input
@@ -337,7 +338,7 @@ export default function ExplorerSideBar() {
           {content.fileContent && (
             <button
             onClick={addNewRequest}
-            className="w-full text-left px-2 py-1 rounded-md hover:bg-orbit-card-background border border-dashed border-orbit-card-border text-sm mt-1"
+            className="w-full text-left px-2 py-1 rounded-md hover:bg-background border border-dashed border-input text-sm mt-1"
             >
             + Add request
           </button>

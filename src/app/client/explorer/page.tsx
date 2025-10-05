@@ -317,7 +317,7 @@ const handleKeyDown = useCallback(
               handleChange(e, "url");
               dispatch(setNatsServerURL(e.target.value));
             }}
-            className="bg-orbit-carbon"
+            className="dark:bg-secondary"
           />
           <AuthDialog
             selectedRequest={selectedRequest}
@@ -353,7 +353,7 @@ const handleKeyDown = useCallback(
                   type="text"
                   value={selectedRequest?.topic || ""}
                   onChange={(e) => handleChange(e, "topic")}
-                  className="bg-orbit-carbon"
+                  className="dark:bg-secondary"
                 />
               </div>
 
@@ -385,7 +385,7 @@ const handleKeyDown = useCallback(
                 ) : (
                   <Textarea
                     ref={textareaRef}
-                    className="bg-orbit-carbon flex-grow resize-none"
+                    className="dark:bg-secondary flex-grow resize-none"
                     value={formatJson(selectedRequest?.data || "")}
                     onChange={(e) => handleChange(e, "data")}
                     onInput={handleAutoResize}
@@ -413,7 +413,7 @@ const handleKeyDown = useCallback(
           >
             <div className="p-4 space-y-2 flex flex-col h-full">
               <p className="font-bold text-xl flex-shrink-0">Response</p>
-              <div className="bg-orbit-carbon flex-grow resize-none p-3 overflow-auto rounded-md outline-1 select-text">
+              <div className="dark:bg-secondary outline outline-input flex-grow resize-none p-3 overflow-auto rounded-md outline-1 select-text">
                 <JSONPretty id="json-pretty" data={(() => {
                 try {
                   const raw = selectedRequest?.lastResponse ?? "";

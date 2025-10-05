@@ -49,8 +49,27 @@ export const IcoRefresh = ({ size = 24, color = "currentColor", className }: Ico
 );
 
 export const IcoLock = ({ size = 24, color = "currentColor", className }: IconProps) => (
-<svg width={size} height={size} className={className} viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8 12V15M4 8V5C4 2.79086 5.79086 1 8 1C9.86384 1 11.4299 2.27477 11.874 4M3 19H13C14.1046 19 15 18.1046 15 17V10C15 8.89543 14.1046 8 13 8H3C1.89543 8 1 8.89543 1 10V17C1 18.1046 1.89543 19 3 19Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <svg width={size} height={size} className={className} viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 12V15M4 8V5C4 2.79086 5.79086 1 8 1C9.86384 1 11.4299 2.27477 11.874 4M3 19H13C14.1046 19 15 18.1046 15 17V10C15 8.89543 14.1046 8 13 8H3C1.89543 8 1 8.89543 1 10V17C1 18.1046 1.89543 19 3 19Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+
+export const IcoClose = ({ size = 24, color = "currentColor", className }: IconProps) => (
+    <svg width={size} height={size} className={className} viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M0.146447 0.146447C0.341709 -0.0488155 0.658291 -0.0488155 0.853553 0.146447L4 3.29289L7.14645 0.146447C7.34171 -0.0488155 7.65829 -0.0488155 7.85355 0.146447C8.04882 0.341709 8.04882 0.658291 7.85355 0.853553L4.70711 4L7.85355 7.14645C8.04882 7.34171 8.04882 7.65829 7.85355 7.85355C7.65829 8.04882 7.34171 8.04882 7.14645 7.85355L4 4.70711L0.853553 7.85355C0.658291 8.04882 0.341709 8.04882 0.146447 7.85355C-0.0488155 7.65829 -0.0488155 7.34171 0.146447 7.14645L3.29289 4L0.146447 0.853553C-0.0488155 0.658291 -0.0488155 0.341709 0.146447 0.146447Z" fill={color}/>
+    </svg>
+);
+
+export const IcoMaximize = ({ size = 24, color = "currentColor", className }: IconProps) => (
+    <svg width={size} height={size} className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 1H15V15H1V1Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const IcoMinimize = ({ size = 24, color = "currentColor", className }: IconProps) => (
+<svg width={size} height={size} className={className} viewBox="0 0 8 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="0.447214" y1="0.552786" x2="7.55279" y2="0.552786" stroke={color} strokeWidth="0.894427" strokeLinecap="round"/>
 </svg>
 
 );

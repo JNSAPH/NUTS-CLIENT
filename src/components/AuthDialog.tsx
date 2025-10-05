@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { setAuthenticationType, setNATSToken, setNKeys, setUsernamePassword as setUsernamePasswordAction } from "@/redux/slices/projectFile";
 import Logger from "@/services/logging";
 import { Request } from "@/types/ProjectFile";
+import { Input } from "./ui/input";
 
 interface AuthDialogProps {
     selectedRequest: Request | null;
@@ -90,10 +91,10 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                     <DialogTrigger
                         className={` h-full aspect-square rounded-lg border
     ${selectedRequest?.authentication?.type !== AuthTypes.NONE && !disabled
-                                ? "border-orbit-mint hover:border-orbit-mint/80"
-                                : "border-orbit-card-border hover:border-orbit-card-border/80"
+                                ? "border-orbit-marine hover:border-orbit-marine/80"
+                                : "border-input hover:border-input/80"
                             }
-    active:bg-orbit-card-border flex items-center justify-center
+    active:bg-secondary flex items-center justify-center
     ${disabled ? "opacity-40 cursor-not-allowed" : "opacity-100 cursor-pointer"}
   `}
                         disabled={disabled}
@@ -132,47 +133,47 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                             <TabsTrigger value="NKEYS">NKeys</TabsTrigger>
                         </TabsList>
                         <TabsContent value="TOKEN">
-                            <input
+                                <Input
                                 type="text"
                                 value={natsToken}
                                 placeholder="(e.g. SUPER_SECRET_TOKEN)"
                                 onChange={(e) => setNatsToken(e.target.value)}
-                                className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
+                                    className="h-10"
                             />
                         </TabsContent>
                         <TabsContent value="USERPASSWORD">
                             <div className="flex flex-col gap-2">
-                                <input
+                                <Input
                                     type="text"
                                     value={usernamePassword.username}
                                     placeholder="Username"
                                     onChange={(e) => setUsernamePassword({ ...usernamePassword, username: e.target.value })}
-                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
+                                    className="h-10"
                                 />
-                                <input
+                                <Input
                                     type="password"
                                     value={usernamePassword.password}
                                     placeholder="Password"
                                     onChange={(e) => setUsernamePassword({ ...usernamePassword, password: e.target.value })}
-                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
+                                    className="h-10"
                                 />
                             </div>
                         </TabsContent>
                         <TabsContent value="NKEYS">
                             <div className="flex flex-col gap-2">
-                                <input
+                                <Input
                                     type="text"
                                     value={nkeysPair.jwt}
                                     placeholder="JWT"
                                     onChange={(e) => setNKeysPair({ ...nkeysPair, jwt: e.target.value })}
-                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
+                                    className="h-10"
                                 />
-                                <input
+                                <Input
                                     type="text" // change to "password" if you want to hide the seed
                                     value={nkeysPair.seed}
                                     placeholder="Seed"
                                     onChange={(e) => setNKeysPair({ ...nkeysPair, seed: e.target.value })}
-                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
+                                    className="h-10"
                                 />
                             </div>
 
