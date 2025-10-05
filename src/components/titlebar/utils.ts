@@ -29,30 +29,33 @@ export async function maximizeWindow() {
 }
 
 /** Handler Opening a project file from the welcome page */
-export async function handleOpenProject(dispatch: AppDispatch) {
+export async function handleOpenProject(dispatch: AppDispatch): Promise<boolean> {
+  // Try to open a project file
   const result = await openProjectFile();
 
-  if (result === "ERROR") {
-    // On Error, stay on welcome page
-    return;
-  }
+  // If there was an error, stay on the welcome page
+  if (result === "ERROR") return false;
 
-  if (result !== "CANCELED") {
-    const [filePath, fileContent] = result;
-    dispatch(setFileContent(fileContent));
-    dispatch(setFilePath(filePath));
-    dispatch(setUnsavedChanges(false));
-  }
+  // If the user canceled, also stay on the welcome page
+  if (result === "CANCELED") return false;
+
+  // Otherwise, result contains [filePath, fileContent]
+  const [filePath, fileContent] = result;
+  dispatch(setFileContent(fileContent));
+  dispatch(setFilePath(filePath));
+  dispatch(setUnsavedChanges(false));
+  return true;
 }
 
-export async function handleNewProject(dispatch: AppDispatch) {
+export async function handleNewProject(dispatch: AppDispatch): Promise<boolean> {
   const result = await createProjectFile();
 
-  if (result === 'ERROR' || result === 'CANCELED') return;
+  if (result === 'ERROR' || result === 'CANCELED') return false;
 
   const [filePath, fileContent] = result;
   dispatch(setFileContent(fileContent));
   dispatch(setFilePath(filePath));
   dispatch(setUnsavedChanges(false));
+  return true;
 }
 

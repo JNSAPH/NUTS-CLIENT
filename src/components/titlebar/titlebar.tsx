@@ -111,7 +111,7 @@ export default function TitleBar() {
               alt="Orbit Icon"
               width={28}
               height={28}
-              className="select-none pointer-events-none"
+              className="select-none pointer-events-none "
             />
           </div>
           <Menubar className="outline-none border-none ">
@@ -120,7 +120,7 @@ export default function TitleBar() {
               <MenubarContent>
                 <MenubarItem onClick={handleNewProject}>
                   New Project
-                  <MenubarShortcut>Ctrl+N</MenubarShortcut>
+                  <MenubarShortcut>⌘/Ctrl+N</MenubarShortcut>
                 </MenubarItem>
                 <MenubarItem onClick={handleOpenFile}>
                   Open Project
@@ -132,7 +132,7 @@ export default function TitleBar() {
                 >
                   {unsavedChanges ? "● " : ""}
                   Save Project
-                  <MenubarShortcut>Ctrl+S</MenubarShortcut>
+                  <MenubarShortcut>⌘/Ctrl+S</MenubarShortcut>
                 </MenubarItem>
               </MenubarContent>
             </MenubarMenu>

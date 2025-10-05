@@ -1,11 +1,12 @@
 import { isUpdateAvailableResponse, UpdateCheckResponse } from "@/types/UpdateStuff";
+import { getVersion } from "@tauri-apps/api/app";
 
 const packageJSON = require("../../package.json");
 
 export async function isUpdateAvailable(): Promise<false | isUpdateAvailableResponse> {
     const name = packageJSON.name;
     const author = packageJSON.author;
-    const version = packageJSON.version;
+    const version = await getVersion();
     
     const response = await fetch(`https://api.github.com/repos/${author}/${name}/releases/latest`);
     const data: UpdateCheckResponse = await response.json();

@@ -220,15 +220,18 @@ export default function Page() {
   }, [dispatch, selectedRequest, settings.defaultTimeout]);
 
   // Keyboard shortcut (Ctrl+Enter)
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === "Enter") {
-        e.preventDefault();
-        handleSendRequest();
-      }
-    },
-    [handleSendRequest]
-  );
+const handleKeyDown = useCallback(
+  (e: KeyboardEvent) => {
+    // true on ⌘ (Mac) or Ctrl (Windows/Linux)
+    const mod = e.metaKey || e.ctrlKey;
+
+    if (mod && e.key === "Enter") {
+      e.preventDefault();
+      handleSendRequest();
+    }
+  },
+  [handleSendRequest]
+);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -394,7 +397,7 @@ export default function Page() {
                 className="w-full"
                 onClick={handleSendRequest}
               >
-                Send Request (Ctrl+Enter)
+                Send Request (⌘/Ctrl+Enter)
               </Button>
             </div>
           </ResizablePanel>
