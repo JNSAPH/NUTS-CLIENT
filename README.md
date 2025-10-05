@@ -1,17 +1,33 @@
-# NUTS-Client
+<center>
+    <img src=".github/assets/ann.png">
+</center>
 
-NUTS-Client is a file-based NATS GUI designed to streamline the development of microservices. It provides a user-friendly interface to interact with NATS, a powerful messaging system commonly used in distributed systems.
+# 🚀 Announcement: **NUTS-Client** is now **Orbit**
+
+**TL;DR:** We’ve renamed **NUTS-Client** to **Orbit**. Same project, same mission—clearer name, sharper UI, and a few polish touches. No breaking changes to your data; a simple rename in your tooling and you're good to go.
+
+---
+
+## Why the rename?
+
+- **Clarity:** “Orbit” better reflects the idea of observing, navigating, and interacting with your services and messages from a single, stable vantage point.  
+- **Room to grow:** We’re expanding beyond the original scope, and the new name fits the broader roadmap.
+
+---
+
+## What is Orbit?
+
+Orbit is a **file-based GUI client for NATS** that streamlines microservice development. Use it to browse subjects, publish/subscribe, inspect payloads, and iterate quickly—without leaving your flow.
+
 
 <center>
     <img src=".github/assets/screenshot.png" width="600px">
 </center>
 
----
 
 ## Development
 
 ### Setting Up a NATS Server
-
 To develop and test your NATS client, you will need a running NATS Server. We provide a Python-based service that listens to topics like `time`, `TP_TEST1`, and `TP_TEST2`. 
 
 The recommended way to run a NATS Broker is via Docker. You can do so with the following commands:
@@ -41,27 +57,3 @@ npm run tauri dev
 ```
 
 This will start the client in a development environment.
-
----
-
-### Building the Client in Debug Mode
-
-If you want to build the client for debugging purposes, run:
-
-```sh
-npm run tauri build -- --debug
-```
-
-This will generate a debug build of the client.
-
----
-
-### Building the Client for Release
-
-To create a release build of the client, use the following command:
-
-```sh
-npm run tauri build
-```
-
-This will generate a production-ready build of the NUTS-Client.

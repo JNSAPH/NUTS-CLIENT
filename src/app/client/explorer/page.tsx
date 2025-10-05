@@ -14,6 +14,7 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import JSONPretty from 'react-json-pretty';
 import {
   setFileContent,
   setLastResponse,
@@ -384,7 +385,7 @@ const handleKeyDown = useCallback(
                 ) : (
                   <Textarea
                     ref={textareaRef}
-                    className="bg-orbit-carbon"
+                    className="bg-orbit-carbon flex-grow resize-none"
                     value={formatJson(selectedRequest?.data || "")}
                     onChange={(e) => handleChange(e, "data")}
                     onInput={handleAutoResize}
@@ -412,18 +413,17 @@ const handleKeyDown = useCallback(
           >
             <div className="p-4 space-y-2 flex flex-col h-full">
               <p className="font-bold text-xl flex-shrink-0">Response</p>
-              <Textarea
-                readOnly
-                className="bg-orbit-carbon flex-grow resize-none"
-                value={(() => {
-                  try {
-                    const raw = selectedRequest?.lastResponse ?? "";
-                    return JSON.parse(raw);
-                  } catch (err) {
-                    return selectedRequest?.lastResponse ?? "";
-                  }
-                })()}
-              />
+              <div className="bg-orbit-carbon flex-grow resize-none p-3 overflow-auto rounded-md outline-1 outline outline-orbit-carbon">
+                <JSONPretty id="json-pretty" data={(() => {
+                try {
+                  const raw = selectedRequest?.lastResponse ?? "";
+                  return JSON.parse(raw);
+                } catch (err) {
+                  return selectedRequest?.lastResponse ?? "";
+                }
+              })()}/>
+                </div>
+              
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
