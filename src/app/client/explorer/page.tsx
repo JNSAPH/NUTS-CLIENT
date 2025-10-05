@@ -413,7 +413,7 @@ const handleKeyDown = useCallback(
           >
             <div className="p-4 space-y-2 flex flex-col h-full">
               <p className="font-bold text-xl flex-shrink-0">Response</p>
-              <div className="bg-orbit-carbon flex-grow resize-none p-3 overflow-auto rounded-md outline-1 outline outline-orbit-carbon">
+              <div className="bg-orbit-carbon flex-grow resize-none p-3 overflow-auto rounded-md outline-1 select-text">
                 <JSONPretty id="json-pretty" data={(() => {
                 try {
                   const raw = selectedRequest?.lastResponse ?? "";
@@ -423,7 +423,6 @@ const handleKeyDown = useCallback(
                 }
               })()}/>
                 </div>
-              
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
