@@ -9,7 +9,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
 
   return (
-    <div className="bg-orbit-night h-full w-screen p-0 flex flex-col">
+    <div className="bg-background h-full w-screen p-0 flex flex-col">
       <TitleBar />
       <div className="flex flex-1 w-full overflow-y-auto">
         <SideBar />

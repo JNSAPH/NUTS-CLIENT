@@ -54,44 +54,6 @@ export default {
   					red: '#FF7780'
   				}
   			},
-  			cshadcn: {
-  				switchActiveBg: '#f3f3f3'
-  			},
-  			shadcn: {
-  				border: '#2d2d2e',
-  				input: '#1e1e1e',
-  				ring: 'hsl(var(--ring))',
-  				background: '#4a4a4a',
-  				foreground: 'hsl(var(--foreground))',
-  				primary: {
-  					DEFAULT: 'hsl(var(--primary))',
-  					foreground: 'hsl(var(--primary-foreground))'
-  				},
-  				secondary: {
-  					DEFAULT: 'hsl(var(--secondary))',
-  					foreground: 'hsl(var(--secondary-foreground))'
-  				},
-  				destructive: {
-  					DEFAULT: 'hsl(var(--destructive))',
-  					foreground: 'hsl(var(--destructive-foreground))'
-  				},
-  				muted: {
-  					DEFAULT: 'hsl(var(--muted))',
-  					foreground: 'hsl(var(--muted-foreground))'
-  				},
-  				accent: {
-  					DEFAULT: '#2a2a2a',
-  					foreground: 'hsl(var(--accent-foreground))'
-  				},
-  				popover: {
-  					DEFAULT: '#1e1e1e',
-  					foreground: 'hsl(var(--popover-foreground))'
-  				},
-  				card: {
-  					DEFAULT: 'hsl(var(--card))',
-  					foreground: 'hsl(var(--card-foreground))'
-  				}
-  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

@@ -45,7 +45,7 @@ function SideBarItem(props: SideBarItemProps) {
     >
       <div
         className={`flex items-center justify-center w-[42px] h-[42px] rounded-lg transition-all duration-200 
-          ${isActive ? 'bg-orbit-marine text-white' : 'bg-transparent group-hover:bg-clientColors-button-hover'}`}
+          ${isActive ? 'bg-orbit-marine text-white' : 'bg-transparent group-hover:bg-orbit-mint/20 text-muted-foreground'}`}
       >
         {props.icon}
       </div>

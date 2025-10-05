@@ -137,8 +137,8 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
         <div
           ref={setNodeRef}
           style={style}
-          className={`flex items-center p-1 rounded-md hover:bg-clientColors-card-background transition-all justify-between cursor-pointer ${
-            active ? "bg-clientColors-card-background" : ""
+          className={`flex items-center p-1 rounded-md hover:bg-orbit-night/80 transition-all justify-between cursor-pointer ${
+            active ? "bg-orbit-night" : ""
           }`}
           onClick={() => dispatch(setSelectedRequestIndex(index))}
         >
@@ -166,7 +166,7 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
                 autoFocus
                 onPointerDown={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
-                className="bg-clientColors-card-background border text-sm border-clientColors-card-border w-full"
+                className="text-sm w-full outline-none bg-background"
               />
             ) : (
               <p onDoubleClick={handleDoubleClick} className="text-sm w-full">
@@ -289,7 +289,7 @@ export default function ExplorerSideBar() {
 
   return (
     <div className="h-full w-full bg-orbit-carbon rounded-tr-xl border-l-2 border-orbit-night overflow-auto space-y-[2px] p-2">
-      <div className="flex justify-between items-center border-b-2 border-clientColors-card-border pb-2 mb-2">
+      <div className="flex justify-between items-center border-b-2 border-secondary pb-2 mb-2">
         {isEditingProjectName ? (
           <input
             type="text"
@@ -298,7 +298,7 @@ export default function ExplorerSideBar() {
             onBlur={commitProjectName}
             onKeyDown={(e) => e.key === "Enter" && commitProjectName()}
             autoFocus
-            className="bg-clientColors-card-background border border-clientColors-card-border w-full mr-2"
+            className="bg-secondary outline-none w-full mr-2"
             onMouseDown={(e) => e.stopPropagation()}
           />
         ) : (

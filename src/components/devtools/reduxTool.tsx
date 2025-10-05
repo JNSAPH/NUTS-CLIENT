@@ -13,7 +13,7 @@ export default function ReduxDevTool() {
         <div className="w-full h-full top-0 left-0 absolute z-50 pointer-events-none">
             <ResizablePanelGroup direction="horizontal" className="w-full" >
                 <ResizablePanel minSize={10} className=""/>
-                <ResizableHandle className="border border-clientColors-accentColor" />
+                <ResizableHandle/>
 
                 <ResizablePanel minSize={1} defaultSize={25} maxSize={99} className="bg-slate-800 pointer-events-auto h-full">
                     <div className="overflow-auto p-4 h-full">

@@ -107,7 +107,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div
-        className="bg-orbit-night h-full w-full flex flex-col items-center justify-center"
+        className="bg-background h-full w-full flex flex-col items-center justify-center"
         data-tauri-drag-region
       >
         <p>Yeah this is a loading screen</p>

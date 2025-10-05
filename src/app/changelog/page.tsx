@@ -91,7 +91,7 @@ export default function ChangelogPage() {
   const anyResults = filtered.some((e) => e.changes.length > 0);
 
   return (
-    <div className="min-h-screen w-full bg-orbit-night text-slate-200">
+    <div className="min-h-screen w-full bg-background text-slate-200">
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-orbit-carbon/80 bg-orbit-night/80 backdrop-blur supports-[backdrop-filter]:bg-orbit-night/70">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
