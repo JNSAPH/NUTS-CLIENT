@@ -1,0 +1,16 @@
+[
+  {
+    "version": "1.0.0",
+    "date": "2025-01-15",
+    "changes": [
+      "NUTS-Client is now Orbit. We've joined oOVOLabs to expand into more DevTools.",
+      "Improved overall UI/UX across the app.",
+      "Resolved numerous bugs and UX issues.",
+      "Added a Changelog page to track updates.",
+      "Added keyboard shortcuts for common actions.",
+      "Added a Welcome page to help new users get started.",
+      "Added a Settings page for customization.",
+      "Removed code clutter."
+    ]
+  }
+]

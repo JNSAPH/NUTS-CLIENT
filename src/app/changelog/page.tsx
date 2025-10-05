@@ -53,27 +53,11 @@ function formatDate(iso: string) {
 }
 
 export default function ChangelogPage() {
-  const changelog = [
-    {
-      version: "1.2.0",
-      date: "2024-06-15",
-      changes: [
-        "Added new feature X for better user experience.",
-        "Improved performance of Y component.",
-        "Fixed bug in Z that caused crashes.",
-        "Hello World :D"
-      ],
-    },
-    {
-      version: "1.1.0",
-      date: "2024-05-10",
-      changes: [
-        "Introduced feature A to enhance functionality.",
-        "Updated dependencies to latest versions.",
-        "Resolved minor UI glitches.",
-      ],
-    },
-  ];
+  const changelog = require("./changelog.json") as {
+    version: string;
+    date: string;
+    changes: string[];
+  }[];
 
   const [query, setQuery] = React.useState("");
   const [filter, setFilter] = React.useState<"all" | ChangeType>("all");
