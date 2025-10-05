@@ -144,7 +144,8 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
         >
           <div className="flex items-center gap-2 w-full">
             {/* Drag handle */}
-            <button
+            {!isEditing && (
+              <button
               ref={setActivatorNodeRef}
               {...attributes}
               {...listeners}
@@ -154,6 +155,7 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
             >
               ⋮⋮
             </button>
+            )}
 
             {/* Editable name */}
             {isEditing ? (
@@ -166,7 +168,7 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
                 autoFocus
                 onPointerDown={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
-                className="text-sm w-full outline-none bg-background"
+                className="text-sm w-full outline-1 outline-none bg-background/80"
               />
             ) : (
               <p onDoubleClick={handleDoubleClick} className="text-sm w-full">
