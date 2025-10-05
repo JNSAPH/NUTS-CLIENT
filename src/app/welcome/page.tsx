@@ -4,15 +4,8 @@ import React, { useEffect } from "react";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { createProjectFile, openProjectFile } from "@/services/fileManager";
 import { useDispatch } from "react-redux";
 import { redirect } from "next/navigation";
-import {
-  setFileContent,
-  setFilePath,
-  setSelectedRequestIndex,
-  setUnsavedChanges,
-} from "@/redux/slices/projectFile";
 import { handleNewProject, handleOpenProject } from "@/components/titlebar/utils";
 
 export default function WelcomePage() {

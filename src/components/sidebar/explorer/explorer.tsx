@@ -104,6 +104,7 @@ function SidebarItem({ name, index, active, id }: SidebarItemProps) {
       ]
   );
 
+  // Handlers for renaming
   const handleDoubleClick = () => setIsEditing(true);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setInputValue(e.target.value);

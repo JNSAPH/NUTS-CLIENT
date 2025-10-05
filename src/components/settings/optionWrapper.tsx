@@ -60,7 +60,7 @@ export function OptionSection({
     <div className={`space-y-4 ${className ?? ""}`}>
       {(title || description) && (
         <div className="space-y-1">
-          {title && <h2 className="text-2xl font-semibold">{title}</h2>}
+          {title && <h2 className="text-2xl font-extrabold">{title}</h2>}
           {description && (
             <p className="text-sm opacity-80 leading-tight">{description}</p>
           )}
