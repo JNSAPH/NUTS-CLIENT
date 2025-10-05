@@ -42,7 +42,7 @@ const Layout = ({ children }: LayoutProps) => {
                         <ExplorerSideBar />
                     </div>
                 </ResizablePanel>
-                <ResizableHandle />
+                <ResizableHandle className="border border-background" />
                 <ResizablePanel className="relative h-full">
                     <div className="absolute inset-0">
                         {children}

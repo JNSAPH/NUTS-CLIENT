@@ -20,11 +20,12 @@ export const IcoFile = ({ size = 24, color = "currentColor", className }: IconPr
 );
 
 export const IcoFolder = ({ size = 24, color = "currentColor", className }: IconProps) => (
-    <svg className={className} width={size} height={size} viewBox="0 0 16 13" fill={color} xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 2.29412C0 1.02711 1.07452 0 2.4 0H5.73726C6.37378 0 6.98423 0.241701 7.43431 0.671932L8.09706 1.30544C8.24709 1.44885 8.45057 1.52941 8.66274 1.52941H13.6C14.9255 1.52941 16 2.55652 16 3.82353V4.99745C15.5293 4.73719 14.9829 4.58824 14.4 4.58824H1.6C1.01714 4.58824 0.470677 4.73719 0 4.99745V2.29412Z" fill={color} />
-        <path d="M0 7.64706V10.7059C0 11.9729 1.07452 13 2.4 13H13.6C14.9255 13 16 11.9729 16 10.7059V7.64706C16 6.80239 15.2837 6.11765 14.4 6.11765H1.6C0.716344 6.11765 0 6.80239 0 7.64706Z" fill={color} />
-    </svg>
+    <svg className={className} width={size} height={size}  viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 1.925C0 0.861852 0.861852 0 1.925 0H4.99241C5.49382 0 5.97545 0.195641 6.33482 0.545303L6.95851 1.15214C7.12186 1.31107 7.34078 1.4 7.5687 1.4H12.075C13.1381 1.4 14 2.26185 14 3.325V4.4099C13.7375 4.2757 13.4401 4.2 13.125 4.2H0.875C0.559922 4.2 0.262524 4.2757 0 4.4099V1.925Z" fill={color}/>
+    <path d="M0 6.125V9.975C0 11.0381 0.861852 11.9 1.925 11.9H12.075C13.1381 11.9 14 11.0381 14 9.975V6.125C14 5.64175 13.6082 5.25 13.125 5.25H0.875C0.391751 5.25 0 5.64175 0 6.125Z" fill={color}/>
+</svg>
 );
+
 
 export const IcoBin = ({ size = 24, color = "currentColor", className }: IconProps) => (
     <svg className={className} width={size} height={size} viewBox="0 0 18 20" fill={"none"} xmlns="http://www.w3.org/2000/svg">
@@ -48,8 +49,27 @@ export const IcoRefresh = ({ size = 24, color = "currentColor", className }: Ico
 );
 
 export const IcoLock = ({ size = 24, color = "currentColor", className }: IconProps) => (
-<svg width={size} height={size} className={className} viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8 12V15M4 8V5C4 2.79086 5.79086 1 8 1C9.86384 1 11.4299 2.27477 11.874 4M3 19H13C14.1046 19 15 18.1046 15 17V10C15 8.89543 14.1046 8 13 8H3C1.89543 8 1 8.89543 1 10V17C1 18.1046 1.89543 19 3 19Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <svg width={size} height={size} className={className} viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 12V15M4 8V5C4 2.79086 5.79086 1 8 1C9.86384 1 11.4299 2.27477 11.874 4M3 19H13C14.1046 19 15 18.1046 15 17V10C15 8.89543 14.1046 8 13 8H3C1.89543 8 1 8.89543 1 10V17C1 18.1046 1.89543 19 3 19Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+
+export const IcoClose = ({ size = 24, color = "currentColor", className }: IconProps) => (
+    <svg width={size} height={size} className={className} viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M0.146447 0.146447C0.341709 -0.0488155 0.658291 -0.0488155 0.853553 0.146447L4 3.29289L7.14645 0.146447C7.34171 -0.0488155 7.65829 -0.0488155 7.85355 0.146447C8.04882 0.341709 8.04882 0.658291 7.85355 0.853553L4.70711 4L7.85355 7.14645C8.04882 7.34171 8.04882 7.65829 7.85355 7.85355C7.65829 8.04882 7.34171 8.04882 7.14645 7.85355L4 4.70711L0.853553 7.85355C0.658291 8.04882 0.341709 8.04882 0.146447 7.85355C-0.0488155 7.65829 -0.0488155 7.34171 0.146447 7.14645L3.29289 4L0.146447 0.853553C-0.0488155 0.658291 -0.0488155 0.341709 0.146447 0.146447Z" fill={color}/>
+    </svg>
+);
+
+export const IcoMaximize = ({ size = 24, color = "currentColor", className }: IconProps) => (
+    <svg width={size} height={size} className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 1H15V15H1V1Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const IcoMinimize = ({ size = 24, color = "currentColor", className }: IconProps) => (
+<svg width={size} height={size} className={className} viewBox="0 0 8 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="0.447214" y1="0.552786" x2="7.55279" y2="0.552786" stroke={color} strokeWidth="0.894427" strokeLinecap="round"/>
 </svg>
 
 );

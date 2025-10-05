@@ -5,6 +5,8 @@ import RootWrapper from "@/components/RootWrapper";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,13 +28,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen`}>
-        <TooltipProvider>
-        <RootWrapper>
-          {children}
-        </RootWrapper>
-        </TooltipProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen text-black dark:text-white`}
+      >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <TooltipProvider>
+            <RootWrapper>{children}</RootWrapper>
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

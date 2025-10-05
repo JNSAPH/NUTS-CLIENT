@@ -1,3 +1,4 @@
+import Logger from '@/services/logging';
 import { ClientSettings } from '@/types/Settings';
 import { isUpdateAvailableResponse } from '@/types/UpdateStuff';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -8,6 +9,7 @@ interface WindowPropertiesState {
   title: string;
   selectedTab: AvailableTabs;
   updateInfo: isUpdateAvailableResponse | null;
+  lastSeenVersion: string;
   clientSettings: ClientSettings; 
 }
 
@@ -15,9 +17,10 @@ export type AvailableTabs = 'explorer' | 'settings';
 
 const initialState: WindowPropertiesState = {
   isFullScreen: false,
-  title: 'NUTS - NATS Client',
+  title: 'Orbit',
   selectedTab: 'explorer',
   updateInfo: null,
+  lastSeenVersion: '0.0.0',
   clientSettings: {
     hideUpdateNotifications: false,
     defaultNATSURL: 'nats://127.0.0.1:4222',
@@ -49,9 +52,12 @@ const windowPropertiesSlice = createSlice({
     },
     setClientSettings: (state, action: PayloadAction<ClientSettings>) => {
       state.clientSettings = action.payload;
+    },
+    setLastSeenVersion: (state, action: PayloadAction<string>) => {
+      state.lastSeenVersion = action.payload;
     }
   },
 });
 
-export const { toggleFullScreen, setTitle, setSelectedTab, setUpdateInfo, setClientSettings } = windowPropertiesSlice.actions;
+export const { toggleFullScreen, setTitle, setSelectedTab, setUpdateInfo, setClientSettings, setLastSeenVersion } = windowPropertiesSlice.actions;
 export default windowPropertiesSlice.reducer;
