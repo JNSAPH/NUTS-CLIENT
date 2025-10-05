@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Nuts Client",
+  "productName": "Orbit",
   "version": "0.2.0",
   "identifier": "com.jnsaph.nuts-client",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Nuts Client",
+        "title": "Orbit",
         "width": 1000,
         "height": 600,
         "minHeight": 400,

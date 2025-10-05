@@ -40,7 +40,7 @@ export default function Home() {
       Logger.info("Starting client...");
 
       // Setup Window
-      await window.setTitle("Loading Nuts...");
+      await window.setTitle("Loading Orbit...");
       await window.setSize(new LogicalSize(300, 400));
       await window.setResizable(false);
       await window.center();
@@ -68,7 +68,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="bg-orbit-background h-full w-full flex flex-col items-center justify-center" data-tauri-drag-region>
+      <div className="bg-orbit-night h-full w-full flex flex-col items-center justify-center" data-tauri-drag-region>
         <p>Yeah this is a loading screen</p>
         <br/>
         <p>{LoadingMessages[Math.floor(Math.random() * LoadingMessages.length)]}</p>

@@ -11,9 +11,12 @@ export default {
   	extend: {
   		colors: {
   			orbit: {
-  				background: '#0E0E0F',
+  				night: '#0E0E0F',
+				carbon: '#171717',
 				marine: '#4468F2',
-				sideBar: '#1A1A1B',
+				baby: '#DB9DFF',
+				mint: '#9DFDD0',
+				lavender: '#AA9DF8',
 				window: {
 					btnClose: '#E81123',
 					btnCloseHover: '#C42B1C',

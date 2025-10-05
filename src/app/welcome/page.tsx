@@ -21,10 +21,10 @@ export default function WelcomePage() {
 
   useEffect(() => {
     async function setupWindow() {
-      await window.setTitle("Welcome to Nuts Client");
-      await window.setSize(new LogicalSize(300, 440));
+      await window.setTitle("Welcome to Orbit");
+      await window.setSize(new LogicalSize(584, 440));
       await window.setResizable(true);
-      // await window.center();
+      await window.center();
     }
 
     setupWindow();
@@ -43,7 +43,7 @@ export default function WelcomePage() {
       <div className="flex flex-col items-center space-y-10">
         <Image
           src="/logo_color.svg"
-          alt="Nuts Client Logo"
+          alt="Orbit Client Logo"
           width={150}
           height={150}
           className="select-none pointer-events-none"

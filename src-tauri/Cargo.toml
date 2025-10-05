@@ -1,5 +1,5 @@
 [package]
-name = "NutsClient"
+name = "Orbit"
 version = "0.2.0"
 description = "A Tauri App"
 authors = ["you"]

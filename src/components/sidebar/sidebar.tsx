@@ -60,19 +60,26 @@ function UpdateAvailableItem() {
     
     if (reduxState.updateInfo !== null && !hideUpdateNotifications) {
         return (
-            <div className='relative flex items-center justify-center w-full h-[48px] bg-clientColors-button-background hover:bg-clientColors-button-hover cursor-pointer' onClick={() => {
-                window.open(reduxState.updateInfo?.html_url, '_blank'); 
-            }}>
-                {/* Icon */}
-                <div className="relative">
-                    <IcoRefresh />
-                    {/* Notification Bubble */}
-                    <span className="absolute bottom-0 right-0 flex h-[10px] w-[10px]">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-full w-full bg-sky-500"></span>
-                    </span>
-                </div>
-            </div>
+<div
+      className="flex items-center justify-center p-2 cursor-pointer group"
+      onClick={() => {
+        const url = reduxState.updateInfo?.html_url;
+        if (url) window.open(url, "_blank");
+      }}
+      aria-label="Open latest release notes"
+    >
+      <div
+        className={`flex items-center justify-center w-[42px] h-[42px] rounded-lg transition-all duration-200 bg-transparent group-hover:bg-orbit-mint/20`}
+      >
+        <div className="relative">
+          <IcoRefresh />
+          <span className="absolute bottom-0 right-0 flex h-[10px] w-[10px]">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orbit-mint opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-full w-full bg-orbit-mint"></span>
+          </span>
+        </div>
+      </div>
+    </div>
         );
     }
 }
@@ -84,7 +91,7 @@ export default function SideBar() {
     const selectedTab = useSelector((state: RootState) => state.windowProperties.selectedTab);
 
     return (
-        <div className={`h-full flex flex-col justify-between bg-orbit-sideBar ${notRoundedPaths.includes(selectedTab) ? 'rounded-t-xl' : 'rounded-tl-xl'}`}>
+        <div className={`h-full flex flex-col justify-between bg-orbit-carbon ${notRoundedPaths.includes(selectedTab) ? 'rounded-t-xl' : 'rounded-tl-xl'}`}>
             <div>
                 {SideBarItems.filter(item => item.tab !== 'settings').map((item, index) => (
                     <SideBarItem
