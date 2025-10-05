@@ -5,6 +5,7 @@ import {
   OptionWrapper,
 } from "@/components/settings/optionWrapper";
 import { Button } from "@/components/ui/button";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import {
   Select,
   SelectContent,
@@ -15,6 +16,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { setClientSettings } from "@/redux/slices/windowProperties";
 import { clearPersistedData, RootState } from "@/redux/store";
+import Logger from "@/services/logging";
 import {
   monacoEditorLanguages,
   monacoEditorLanguageType,
@@ -182,7 +184,22 @@ export default function Page() {
             title="Thank you for using Orbit!"
             description={`Built with ❤️ by aph — Orbit is part of oOVOLabs.`}
           >
-            <Button disabled className="mt-2">
+            <Button className="mt-2" onClick={() => {
+                      const w = new WebviewWindow("my-new-window", {
+          url: "/changelog",
+          width: 800,
+          height: 600,
+          title: "Orbit - Changelog",
+        });
+
+        // you can listen to creation or errors
+        w.once("tauri://created", () => {
+          Logger.info("changelog window created");
+        });
+        w.once("tauri://error", (e) => {
+          Logger.error("error creating window:", e);
+        });
+            }}>
               Version {packageJSON.version}
             </Button>
           </OptionWrapper>

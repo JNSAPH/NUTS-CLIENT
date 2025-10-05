@@ -66,9 +66,9 @@ export default function Home() {
 
       // Compare versions BEFORE updating lastSeenVersion
       if (
-        update && true
-        // lastSeenVersion !== "0.0.0" &&
-        // lastSeenVersion !== update.old_version
+        update &&
+        lastSeenVersion !== "0.0.0" &&
+        lastSeenVersion !== update.old_version
       ) {
         // User Updated the app
         Logger.info(`User has updated from version ${lastSeenVersion} to ${update.old_version}`);
@@ -78,7 +78,7 @@ export default function Home() {
           url: "/changelog",
           width: 800,
           height: 600,
-          // other options like center, resizable, etc.
+          title: "Orbit - Changelog",
         });
 
         // you can listen to creation or errors
