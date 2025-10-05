@@ -88,12 +88,12 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                 <TooltipTrigger asChild>
 
                     <DialogTrigger
-                        className={`bg-clientColors-button-background h-full aspect-square rounded-lg border
+                        className={` h-full aspect-square rounded-lg border
     ${selectedRequest?.authentication?.type !== AuthTypes.NONE && !disabled
-                                ? "border-blue-500 hover:border-blue-400"
-                                : "border-clientColors-card-border hover:border-clientColors-scrollbarThumb-hover"
+                                ? "border-orbit-mint hover:border-orbit-mint/80"
+                                : "border-orbit-card-border hover:border-orbit-card-border/80"
                             }
-    active:bg-clientColors-card-border flex items-center justify-center
+    active:bg-orbit-card-border flex items-center justify-center
     ${disabled ? "opacity-40 cursor-not-allowed" : "opacity-100 cursor-pointer"}
   `}
                         disabled={disabled}
@@ -137,7 +137,7 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                                 value={natsToken}
                                 placeholder="(e.g. SUPER_SECRET_TOKEN)"
                                 onChange={(e) => setNatsToken(e.target.value)}
-                                className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                                className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
                             />
                         </TabsContent>
                         <TabsContent value="USERPASSWORD">
@@ -147,14 +147,14 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                                     value={usernamePassword.username}
                                     placeholder="Username"
                                     onChange={(e) => setUsernamePassword({ ...usernamePassword, username: e.target.value })}
-                                    className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
                                 />
                                 <input
                                     type="password"
                                     value={usernamePassword.password}
                                     placeholder="Password"
                                     onChange={(e) => setUsernamePassword({ ...usernamePassword, password: e.target.value })}
-                                    className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
                                 />
                             </div>
                         </TabsContent>
@@ -165,14 +165,14 @@ export default function AuthDialog({ selectedRequest, disabled }: AuthDialogProp
                                     value={nkeysPair.jwt}
                                     placeholder="JWT"
                                     onChange={(e) => setNKeysPair({ ...nkeysPair, jwt: e.target.value })}
-                                    className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
                                 />
                                 <input
                                     type="text" // change to "password" if you want to hide the seed
                                     value={nkeysPair.seed}
                                     placeholder="Seed"
                                     onChange={(e) => setNKeysPair({ ...nkeysPair, seed: e.target.value })}
-                                    className="bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                                    className="bg-orbit-card-background border border-orbit-card-border p-3 rounded-lg w-full"
                                 />
                             </div>
 

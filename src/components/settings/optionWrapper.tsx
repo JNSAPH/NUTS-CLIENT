@@ -19,7 +19,7 @@ export function OptionWrapper({
       className={`
         flex items-center justify-between gap-4
         py-3
-        border-b border-clientColors-divider last:border-b-0
+        border-b last:border-b-0
         ${className ?? ""}
       `}
       role="listitem"

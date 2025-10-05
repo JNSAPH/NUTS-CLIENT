@@ -22,6 +22,7 @@ import {
   monacoEditorLanguageType,
 } from "@/types/Settings";
 import { useDispatch, useSelector } from "react-redux";
+import { Input } from "@/components/ui/input";
 
 const packageJSON = require("../../../../package.json");
 
@@ -60,26 +61,14 @@ export default function Page() {
               title="Default NATS URL"
               description="The default NATS URL that will be used when creating a new connection."
             >
-              <input
-                type="text"
-                value={content.clientSettings.defaultNATSURL}
-                onChange={(e) => {
-                  dispatch(
-                    setClientSettings({
-                      ...content.clientSettings,
-                      defaultNATSURL: e.target.value,
-                    })
-                  );
-                }}
-                className="mt-2 bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
-              />
+              <Input className="mt-2" placeholder="nats://localhost:4222" />
             </OptionWrapper>
 
             <OptionWrapper
               title="NATS Request Timeout"
               description="Set the tiemout duration (in seconds) for NATS requests. Default is 5 seconds."
             >
-              <input
+              <Input
                 type="number"
                 value={content.clientSettings.defaultTimeout}
                 onChange={(e) => {
@@ -90,7 +79,7 @@ export default function Page() {
                     })
                   );
                 }}
-                className="mt-2 bg-clientColors-card-background border border-clientColors-card-border p-3 rounded-lg w-full"
+                className=""
               />
             </OptionWrapper>
 

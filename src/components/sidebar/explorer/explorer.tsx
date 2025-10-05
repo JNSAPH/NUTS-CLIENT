@@ -335,7 +335,7 @@ export default function ExplorerSideBar() {
           {content.fileContent && (
             <button
             onClick={addNewRequest}
-            className="w-full text-left px-2 py-1 rounded-md hover:bg-clientColors-card-background border border-dashed border-clientColors-card-border text-sm mt-1"
+            className="w-full text-left px-2 py-1 rounded-md hover:bg-orbit-card-background border border-dashed border-orbit-card-border text-sm mt-1"
             >
             + Add request
           </button>

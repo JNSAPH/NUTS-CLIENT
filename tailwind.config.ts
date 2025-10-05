@@ -13,6 +13,10 @@ export default {
   			orbit: {
   				night: '#0E0E0F',
 				carbon: '#171717',
+				card: {
+					background: '#1e1e1e',
+					border: '#2d2d2e'
+				},
 				marine: '#4468F2',
 				baby: '#DB9DFF',
 				mint: '#9DFDD0',
@@ -23,36 +27,6 @@ export default {
 					btnCloseActive: '#9A1C14',
 					btnHover: '#3A3A3C',
 				}
-  			},
-  			clientColors: {
-  				windowBorder: '#2d2d2e',
-  				windowBackground: '#252526',
-  				card: {
-  					background: '#1e1e1e',
-  					border: '#2d2d2e'
-  				},
-  				scrollbarThumb: {
-  					base: '#fff',
-  					hover: '#4a4a4a',
-  					active: '#4a4a4a'
-  				},
-  				button: {
-  					background: '#1e1e1e',
-  					hover: '#4a4a4a',
-  					active: '#4a4a4a'
-  				},
-  				windowSpecfic: {
-  					titleBarCloseBtn: '#00000000',
-  					titleBarCloseBtnHover: '#e81123',
-  					titleBarCloseBtnActive: '#c42b1c',
-  					titleBarOtherBtn: '#00000000',
-  					titleBarOtherBtnHover: '#64D5EA',
-  					titleBarOtherBtnActive: '#64D5EA'
-  				},
-  				accentColor: '#64D5EA',
-  				brand: {
-  					red: '#FF7780'
-  				}
   			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
